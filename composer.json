@@ -12,6 +12,9 @@
     "require-dev": {
         "cakephp/cakephp-codesniffer": "^1.0.0"
     },
+    "replace": {
+        "cakephp/debug_kit": "^2.0"
+    },
     "config": {
         "sort-packages": true,
         "allow-plugins": {
