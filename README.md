@@ -1,4 +1,6 @@
-# CakePHP DebugKit [![Build Status](https://secure.travis-ci.org/cakephp/debug_kit.png?branch=master)](http://travis-ci.org/cakephp/debug_kit)
+# CakePHP DebugKit
+
+__This is forked for CakePHP2.__
 
 DebugKit provides a debugging toolbar and enhanced debugging tools for CakePHP applications.
 
@@ -7,7 +9,7 @@ DebugKit provides a debugging toolbar and enhanced debugging tools for CakePHP a
 The master branch has the following requirements:
 
 * CakePHP 2.2.0 or greater.
-* PHP 5.3.0 or greater.
+* PHP 8.0.0 or greater.
 
 ## Installation
 
