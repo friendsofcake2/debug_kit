@@ -6,6 +6,7 @@
 if (!defined('DS')) {
     define('DS', DIRECTORY_SEPARATOR);
 }
+
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../vendor/friendsofcake2/cakephp/lib/Cake/Test/bootstrap/cake_dot_php.php';
 
