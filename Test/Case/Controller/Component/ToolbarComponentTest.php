@@ -14,6 +14,8 @@
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
+use PHPUnit\Framework\Error\Error;
+
 App::uses('Router', 'Routing');
 App::uses('Controller', 'Controller');
 App::uses('AppController', 'Controller');
@@ -65,7 +67,7 @@ class ToolbarComponentTestCase extends CakeTestCase {
  *
  * @return void
  */
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 
 		Router::connect('/', array('controller' => 'pages', 'action' => 'display', 'home'));
@@ -86,7 +88,7 @@ class ToolbarComponentTestCase extends CakeTestCase {
  *
  * @return void
  */
-	public function tearDown() {
+	public function tearDown(): void {
 		$_SERVER = $this->_server;
 		$_GET = $this->_get;
 
@@ -147,11 +149,14 @@ class ToolbarComponentTestCase extends CakeTestCase {
 /**
  * Test exceptions on bad panel names
  *
- * @expectedException PHPUnit_Framework_Error
+ * @expectedException \PHPUnit\Framework\Error
  * @expectedExceptionMessage Undefined property: ToolbarComponentTestCase::$Controller
  * @return void
  */
 	public function testLoadPanelsError() {
+        $this->_loadController();
+
+        $this->expectException(Error::class);
 		$this->Controller->Toolbar->loadPanels(array('randomNonExisting', 'request'));
 	}
 

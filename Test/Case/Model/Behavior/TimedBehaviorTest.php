@@ -37,7 +37,7 @@ class TimedBehaviorTestCase extends CakeTestCase {
  *
  * @return void
  */
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 		$this->Article = ClassRegistry::init('Article');
 		$this->Article->Behaviors->attach('DebugKit.Timed');
@@ -48,7 +48,7 @@ class TimedBehaviorTestCase extends CakeTestCase {
  *
  * @return void
  */
-	public function tearDown() {
+	public function tearDown(): void {
 		parent::tearDown();
 		unset($this->Article);
 		ClassRegistry::flush();

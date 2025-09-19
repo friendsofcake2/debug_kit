@@ -47,7 +47,7 @@ class ToolbarHelperTestCase extends CakeTestCase {
  *
  * @return void
  */
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 		$db = ConnectionManager::getDatasource('test');
 		$db->fullDebug = true;
@@ -79,7 +79,7 @@ class ToolbarHelperTestCase extends CakeTestCase {
  *
  * @return void
  */
-	public function tearDown() {
+	public function tearDown(): void {
 		parent::tearDown();
 		Cache::delete('debug_kit_toolbar_test_case', 'default');
 		unset($this->Toolbar, $this->Controller);

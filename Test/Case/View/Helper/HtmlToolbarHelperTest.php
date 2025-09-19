@@ -37,7 +37,7 @@ class HtmlToolbarHelperTestCase extends CakeTestCase {
  *
  * @return void
  */
-	public static function setupBeforeClass() {
+	public static function setupBeforeClass(): void {
 		App::build(array(
 			'View' => array(
 				CAKE_CORE_INCLUDE_PATH . DS . 'Cake' . DS . 'Test' . DS . 'test_app' . DS . 'View' . DS,
@@ -52,7 +52,7 @@ class HtmlToolbarHelperTestCase extends CakeTestCase {
  *
  * @return void
  */
-	public static function tearDownAfterClass() {
+	public static function tearDownAfterClass(): void {
 		App::build();
 	}
 
@@ -61,7 +61,7 @@ class HtmlToolbarHelperTestCase extends CakeTestCase {
  *
  * @return void
  */
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 
 		Router::connect('/:controller/:action');
@@ -82,7 +82,7 @@ class HtmlToolbarHelperTestCase extends CakeTestCase {
  *
  * @return void
  */
-	public function tearDown() {
+	public function tearDown(): void {
 		parent::tearDown();
 		unset($this->Toolbar, $this->Controller);
 	}

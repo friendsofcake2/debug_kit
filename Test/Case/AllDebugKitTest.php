@@ -28,7 +28,7 @@ class AllDebugKitTest extends DebugKitGroupTestCase {
 /**
  * Assemble Test Suite
  *
- * @return PHPUnit_Framework_TestSuite the instance of PHPUnit_Framework_TestSuite
+ * @return \PHPUnit\Framework\TestSuite the instance of \PHPUnit\Framework\TestSuite
  */
 	public static function suite() {
 		$suite = new self;

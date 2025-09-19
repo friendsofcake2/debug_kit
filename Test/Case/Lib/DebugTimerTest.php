@@ -30,7 +30,7 @@ class DebugTimerTest extends CakeTestCase {
  *
  * @return void
  */
-	public function tearDown() {
+	public function tearDown(): void {
 		DebugTimer::clear();
 	}
 

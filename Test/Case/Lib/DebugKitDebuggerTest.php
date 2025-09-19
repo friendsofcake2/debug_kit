@@ -32,7 +32,7 @@ class DebugKitDebuggerTest extends CakeTestCase {
  *
  * @return void
  */
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 		Configure::write('log', false);
 		$this->firecake = FireCake::getInstance('TestFireCake');
@@ -44,7 +44,7 @@ class DebugKitDebuggerTest extends CakeTestCase {
  *
  * @return void
  */
-	public function tearDown() {
+	public function tearDown(): void {
 		parent::tearDown();
 		Configure::write('log', true);
 		DebugTimer::clear();
@@ -67,9 +67,9 @@ class DebugKitDebuggerTest extends CakeTestCase {
 
 		$result = $this->firecake->sentHeaders;
 
-		$this->assertRegExp('/GROUP_START/', $result['X-Wf-1-1-1-1']);
-		$this->assertRegExp('/ERROR/', $result['X-Wf-1-1-1-2']);
-		$this->assertRegExp('/GROUP_END/', $result['X-Wf-1-1-1-5']);
+		$this->assertMatchesRegularExpression('/GROUP_START/', $result['X-Wf-1-1-1-1']);
+		$this->assertMatchesRegularExpression('/ERROR/', $result['X-Wf-1-1-1-2']);
+		$this->assertMatchesRegularExpression('/GROUP_END/', $result['X-Wf-1-1-1-4']);
 
 		Debugger::getInstance('Debugger');
 		Debugger::outputAs('html');

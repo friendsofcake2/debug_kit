@@ -33,7 +33,7 @@ class FireCakeTestCase extends CakeTestCase {
  *
  * @return void
  */
-	public function setUp() {
+	public function setUp(): void {
 		$this->firecake = FireCake::getInstance('TestFireCake');
 		TestFireCake::reset();
 	}
@@ -43,7 +43,7 @@ class FireCakeTestCase extends CakeTestCase {
  *
  * @return void
  */
-	public function tearDown() {
+	public function tearDown(): void {
 		TestFireCake::reset();
 	}
 
@@ -290,7 +290,7 @@ class FireCakeTestCase extends CakeTestCase {
 		FireCake::fb('Test', 'Custom label', 'warn');
 		$this->assertEquals($this->firecake->sentHeaders['X-Wf-1-1-1-3'], '47|[{"Type":"WARN","Label":"Custom label"},"Test"]|');
 
-		$this->setExpectedException('PHPUnit_Framework_Error');
+		$this->expectException(\PHPUnit\Framework\Error\Warning::class);
 		$this->assertFalse(FireCake::fb('Test', 'Custom label', 'warn', 'more parameters'));
 
 		$this->assertEquals($this->firecake->sentHeaders['X-Wf-1-Index'], 3);

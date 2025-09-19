@@ -10,7 +10,9 @@
         "composer/installers": "*"
     },
     "require-dev": {
-        "cakephp/cakephp-codesniffer": "^1.0.0"
+        "cakephp/cakephp-codesniffer": "^1.0.0",
+        "friendsofcake2/cakephp": "^2.10",
+        "phpunit/phpunit": "^9.5"
     },
     "replace": {
         "cakephp/debug_kit": "^2.0"

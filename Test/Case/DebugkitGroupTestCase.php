@@ -18,7 +18,7 @@
 /**
  * Class DebugKitGroupTestCase
  */
-class DebugKitGroupTestCase extends PHPUnit_Framework_TestSuite {
+class DebugKitGroupTestCase extends \PHPUnit\Framework\TestSuite {
 
 /**
  * Constructor
