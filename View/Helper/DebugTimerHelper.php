@@ -37,7 +37,7 @@ class DebugTimerHelper extends Helper {
  * @param View $View The view.
  * @param array $settings The settings.
  */
-	public function __construct(View $View, $settings = array()) {
+	public function __construct(View $View, $settings = []) {
 		parent::__construct($View, $settings);
 		DebugTimer::start(
 			'viewRender',

@@ -23,18 +23,18 @@ class IncludePanel extends DebugPanel {
  *
  * @var <type>
  */
-	protected $_pluginPaths = array();
+	protected $_pluginPaths = [];
 
 /**
  * File Types
  *
  * @var array
  */
-	protected $_fileTypes = array(
+	protected $_fileTypes = [
 		'Cache', 'Config', 'Configure', 'Console', 'Component', 'Controller',
 		'Behavior', 'Datasource', 'Model', 'Plugin', 'Test', 'View', 'Utility',
 		'Network', 'Routing', 'I18n', 'Log', 'Error'
-	);
+	];
 
 /**
  * Get a list of plugins on construct for later use
@@ -54,7 +54,7 @@ class IncludePanel extends DebugPanel {
  * @return array
  */
 	public function beforeRender(Controller $controller) {
-		$return = array('core' => array(), 'app' => array(), 'plugins' => array());
+		$return = ['core' => [], 'app' => [], 'plugins' => []];
 
 		foreach (get_included_files() as $file) {
 			$pluginName = $this->_isPluginFile($file);
@@ -82,7 +82,7 @@ class IncludePanel extends DebugPanel {
  * @return array
  */
 	protected function _includePaths() {
-		$paths = array_flip(array_merge(explode(PATH_SEPARATOR, get_include_path()), array(CAKE)));
+		$paths = array_flip(array_merge(explode(PATH_SEPARATOR, get_include_path()), [CAKE]));
 
 		unset($paths['.']);
 		return array_flip($paths);
@@ -95,7 +95,7 @@ class IncludePanel extends DebugPanel {
  * @return bool True if it is a core path, else false.
  */
 	protected function _isCoreFile($file) {
-		return strstr($file, CAKE);
+		return strstr($file, (string) CAKE);
 	}
 
 /**
@@ -105,7 +105,7 @@ class IncludePanel extends DebugPanel {
  * @return bool True if it is an app path, else false.
  */
 	protected function _isAppFile($file) {
-		return strstr($file, APP);
+		return strstr($file, (string) APP);
 	}
 
 /**
@@ -116,7 +116,7 @@ class IncludePanel extends DebugPanel {
  */
 	protected function _isPluginFile($file) {
 		foreach ($this->_pluginPaths as $plugin => $path) {
-			if (strstr($file, $path)) {
+			if (strstr($file, (string) $path)) {
 				return $plugin;
 			}
 		}
@@ -132,16 +132,11 @@ class IncludePanel extends DebugPanel {
  * @return string The replaced string.
  */
 	protected function _niceFileName($file, $type) {
-		switch ($type) {
-			case 'app':
-				return str_replace(APP, 'APP/', $file);
-
-			case 'core':
-				return str_replace(CAKE, 'CORE/', $file);
-
-			default:
-				return str_replace($this->_pluginPaths[$type], $type . '/', $file);
-		}
+		return match ($type) {
+            'app' => str_replace(APP, 'APP/', $file),
+            'core' => str_replace(CAKE, 'CORE/', $file),
+            default => str_replace($this->_pluginPaths[$type], $type . '/', $file),
+        };
 	}
 
 /**

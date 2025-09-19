@@ -41,21 +41,21 @@ class ToolbarAccess extends Model {
 		$db = ConnectionManager::getDataSource($connection);
 		$datasource = $db->config['datasource'];
 
-		$return = array();
+		$return = [];
 		if (preg_match('/(Mysql|Postgres)$/', $datasource)) {
 			$explained = $db->query('EXPLAIN ' . $query);
 			if (preg_match('/Postgres$/', $datasource)) {
-				$queryPlan = array();
+				$queryPlan = [];
 				foreach ($explained as $postgreValue) {
-					$queryPlan[] = array($postgreValue[0]['QUERY PLAN']);
+					$queryPlan[] = [$postgreValue[0]['QUERY PLAN']];
 				}
-				$return = array_merge(array(array('')), $queryPlan);
+				$return = array_merge([['']], $queryPlan);
 			} else {
 				$keys = array_keys($explained[0][0]);
 				foreach ($explained as $mysqlValue) {
 					$queryPlan[] = array_values($mysqlValue[0]);
 				}
-				$return = array_merge(array($keys), $queryPlan);
+				$return = array_merge([$keys], $queryPlan);
 			}
 		}
 		return $return;

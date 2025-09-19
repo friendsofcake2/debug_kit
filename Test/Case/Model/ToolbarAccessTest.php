@@ -30,7 +30,7 @@ class ToolbarAccessTestCase extends CakeTestCase {
  *
  * @var array
  */
-	public $fixtures = array('core.post');
+	public $fixtures = ['core.post'];
 
 /**
  * setUp method
@@ -58,7 +58,7 @@ class ToolbarAccessTestCase extends CakeTestCase {
  * @return void
  */
 	public function testExplainQuery() {
-		$Post = new CakeTestModel(array('table' => 'posts', 'alias' => 'Post'));
+		$Post = new CakeTestModel(['table' => 'posts', 'alias' => 'Post']);
 		$db = $Post->getDataSource();
 		$sql = 'SELECT * FROM ' . $db->fullTableName('posts') . ';';
 		$result = $this->Model->explainQuery($Post->useDbConfig, $sql);

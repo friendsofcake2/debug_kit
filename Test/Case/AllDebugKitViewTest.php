@@ -16,7 +16,7 @@
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
-require_once dirname(__FILE__) . DS . 'DebugkitGroupTestCase.php';
+require_once __DIR__ . DS . 'DebugkitGroupTestCase.php';
 
 /**
  * DebugKitViewTestSuite class

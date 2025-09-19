@@ -21,7 +21,7 @@ class DebugKitLog implements CakeLogInterface {
  *
  * @var array
  */
-	public $logs = array();
+	public $logs = [];
 
 /**
  * Makes the reverse link needed to get the logs later.
@@ -42,8 +42,8 @@ class DebugKitLog implements CakeLogInterface {
  */
 	public function write($type, $message) {
 		if (!isset($this->logs[$type])) {
-			$this->logs[$type] = array();
+			$this->logs[$type] = [];
 		}
-		$this->logs[$type][] = array(date('Y-m-d H:i:s'), (string)$message);
+		$this->logs[$type][] = [date('Y-m-d H:i:s'), (string)$message];
 	}
 }

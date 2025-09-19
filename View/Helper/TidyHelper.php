@@ -28,7 +28,7 @@ class TidyHelper extends AppHelper {
  *
  * @var array
  */
-	public $helpers = array('DebugKit.Toolbar');
+	public $helpers = ['DebugKit.Toolbar'];
 
 /**
  * results property
@@ -49,15 +49,15 @@ class TidyHelper extends AppHelper {
 		$errors = $this->tidyErrors($html, $out);
 
 		if (!$errors) {
-			return array();
+			return [];
 		}
-		$result = array('Error' => array(), 'Warning' => array(), 'Misc' => array());
+		$result = ['Error' => [], 'Warning' => [], 'Misc' => []];
 		$errors = explode("\n", $errors);
 		$markup = explode("\n", $out);
 		foreach ($errors as $error) {
 			preg_match('@line (\d+) column (\d+) - (\w+): (.*)@', $error, $matches);
 			if ($matches) {
-				list($original, $line, $column, $type, $message) = $matches;
+				[$original, $line, $column, $type, $message] = $matches;
 				$line = $line - 1;
 
 				$string = '</strong>';
@@ -121,14 +121,14 @@ class TidyHelper extends AppHelper {
 
 		// direct access? windows etc
 		if (function_exists('tidy_parse_string')) {
-			$tidy = tidy_parse_string($out, array(), 'UTF8');
+			$tidy = tidy_parse_string($out, [], 'UTF8');
 			$tidy->cleanRepair();
 			$errors = $tidy->errorBuffer . "\n";
 			return $errors;
 		}
 
 		// cli
-		$File = new File(rtrim(TMP, DS) . DS . rand() . '.html', true);
+		$File = new File(rtrim(TMP, DS) . DS . random_int(0, mt_getrandmax()) . '.html', true);
 		$File->write($out);
 		$path = $File->pwd();
 		$errors = $path . '.err';
@@ -159,13 +159,13 @@ class TidyHelper extends AppHelper {
 		}
 
 		if (Configure::read('debug')) {
-			$source = Debugger::trace(array('depth' => 1, 'start' => 2)) . "\n";
+			$source = Debugger::trace(['depth' => 1, 'start' => 2]) . "\n";
 			//CakeLog::write('system_calls_' . date('Y-m-d'), "\n" . $source . Debugger::exportVar(compact('cmd','out','return')));
 			//CakeLog::write('system_calls', "\n" . $source . Debugger::exportVar(compact('cmd','out','return')));
 		}
 		if ($return) {
 			return false;
 		}
-		return $_out ? $_out : true;
+		return $_out ?: true;
 	}
 }

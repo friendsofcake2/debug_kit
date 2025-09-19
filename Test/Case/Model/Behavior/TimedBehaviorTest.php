@@ -30,7 +30,7 @@ class TimedBehaviorTestCase extends CakeTestCase {
  *
  * @var array
  */
-	public $fixtures = array('core.article');
+	public $fixtures = ['core.article'];
 
 /**
  * Start Test callback
@@ -82,7 +82,7 @@ class TimedBehaviorTestCase extends CakeTestCase {
 		$timers = DebugKitDebugger::getTimers(false);
 		$this->assertCount(1, $timers);
 
-		$this->Article->save(array('user_id' => 1, 'title' => 'test', 'body' => 'test'));
+		$this->Article->save(['user_id' => 1, 'title' => 'test', 'body' => 'test']);
 		$result = DebugKitDebugger::getTimers(false);
 		$this->assertCount(2, $result);
 	}

@@ -39,14 +39,14 @@ class DebugPanel {
  *
  * @var array
  */
-	public $css = array();
+	public $css = [];
 
 /**
  * Panel's javascript files
  *
  * @var array
  */
-	public $javascript = array();
+	public $javascript = [];
 
 /**
  * Provide a custom element name for this panel. If null, the underscored version of the class

@@ -27,15 +27,15 @@ class EnvironmentPanel extends DebugPanel {
 	public function beforeRender(Controller $controller) {
 		parent::beforeRender($controller);
 
-		$return = array();
+		$return = [];
 
 		// PHP Data
 		$phpVer = phpversion();
-		$return['php'] = array_merge(array('PHP_VERSION' => $phpVer), $_SERVER);
+		$return['php'] = array_merge(['PHP_VERSION' => $phpVer], $_SERVER);
 		unset($return['php']['argv']);
 
 		// CakePHP Data
-		$return['cake'] = array(
+		$return['cake'] = [
 			'APP' => APP,
 			'APP_DIR' => APP_DIR,
 			'APPLIBS' => APPLIBS,
@@ -59,13 +59,13 @@ class EnvironmentPanel extends DebugPanel {
 			'VENDORS' => VENDORS,
 			'WEBROOT_DIR' => WEBROOT_DIR,
 			'WWW_ROOT' => WWW_ROOT
-		);
+		];
 
 		$cakeConstants = array_fill_keys(
-			array(
+			[
 				'DS', 'ROOT', 'FULL_BASE_URL', 'TIME_START', 'SECOND', 'MINUTE', 'HOUR', 'DAY', 'WEEK', 'MONTH', 'YEAR',
 				'LOG_ERROR', 'FULL_BASE_URL'
-			), ''
+			], ''
 		);
 		$var = get_defined_constants(true);
 		$return['app'] = array_diff_key($var['user'], $return['cake'], $cakeConstants);

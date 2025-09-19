@@ -37,10 +37,10 @@ class ToolbarComponent extends Component implements CakeEventListener {
  *
  * @var array
  */
-	public $settings = array(
+	public $settings = [
 		'forceEnable' => false,
 		'autoRun' => true
-	);
+	];
 
 /**
  * Controller instance reference
@@ -54,7 +54,7 @@ class ToolbarComponent extends Component implements CakeEventListener {
  *
  * @var array
  */
-	public $components = array('RequestHandler', 'Session');
+	public $components = ['RequestHandler', 'Session'];
 
 /**
  * The default panels the toolbar uses.
@@ -62,7 +62,7 @@ class ToolbarComponent extends Component implements CakeEventListener {
  *
  * @var array
  */
-	protected $_defaultPanels = array(
+	protected $_defaultPanels = [
 		'DebugKit.History',
 		'DebugKit.Session',
 		'DebugKit.Request',
@@ -72,30 +72,30 @@ class ToolbarComponent extends Component implements CakeEventListener {
 		'DebugKit.Variables',
 		'DebugKit.Environment',
 		'DebugKit.Include'
-	);
+	];
 
 /**
  * Loaded panel objects.
  *
  * @var array
  */
-	public $panels = array();
+	public $panels = [];
 
 /**
  * javascript files component will be using
  *
  * @var array
  */
-	public $javascript = array(
+	public $javascript = [
 		'libs' => 'DebugKit./js/js_debug_toolbar'
-	);
+	];
 
 /**
  * CSS files component will be using
  *
  * @var array
  */
-	public $css = array('DebugKit./css/debug_toolbar.css');
+	public $css = ['DebugKit./css/debug_toolbar.css'];
 
 /**
  * CacheKey used for the cache file.
@@ -128,7 +128,7 @@ class ToolbarComponent extends Component implements CakeEventListener {
  * @param array $settings The settings.
  * @return \ToolbarComponent
  */
-	public function __construct(ComponentCollection $collection, $settings = array()) {
+	public function __construct(ComponentCollection $collection, $settings = []) {
 		$settings = array_merge((array)Configure::read('DebugKit'), $settings);
 		$panels = $this->_defaultPanels;
 		if (isset($settings['panels'])) {
@@ -176,51 +176,47 @@ class ToolbarComponent extends Component implements CakeEventListener {
  * @return array
  */
 	public function implementedEvents() {
-		$before = function ($name) {
-			return function () use ($name) {
+		$before = (fn($name) => function () use ($name) {
 				DebugTimer::start($name, $name);
-			};
-		};
-		$after = function ($name) {
-			return function () use ($name) {
+			});
+		$after = (fn($name) => function () use ($name) {
 				DebugTimer::stop($name);
-			};
-		};
+			});
 
-		return array(
-			'Controller.initialize' => array(
-				array('priority' => 0, 'callable' => $before('Event: Controller.initialize')),
-				array('priority' => 999, 'callable' => $after('Event: Controller.initialize'))
-			),
-			'Controller.startup' => array(
-				array('priority' => 0, 'callable' => $before('Event: Controller.startup')),
-				array('priority' => 999, 'callable' => $after('Event: Controller.startup'))
-			),
-			'Controller.beforeRender' => array(
-				array('priority' => 0, 'callable' => $before('Event: Controller.beforeRender')),
-				array('priority' => 999, 'callable' => $after('Event: Controller.beforeRender'))
-			),
-			'Controller.shutdown' => array(
-				array('priority' => 0, 'callable' => $before('Event: Controller.shutdown')),
-				array('priority' => 999, 'callable' => $after('Event: Controller.shutdown'))
-			),
-			'View.beforeRender' => array(
-				array('priority' => 0, 'callable' => $before('Event: View.beforeRender')),
-				array('priority' => 999, 'callable' => $after('Event: View.beforeRender'))
-			),
-			'View.afterRender' => array(
-				array('priority' => 0, 'callable' => $before('Event: View.afterRender')),
-				array('priority' => 999, 'callable' => $after('Event: View.afterRender'))
-			),
-			'View.beforeLayout' => array(
-				array('priority' => 0, 'callable' => $before('Event: View.beforeLayout')),
-				array('priority' => 999, 'callable' => $after('Event: View.beforeLayout'))
-			),
-			'View.afterLayout' => array(
-				array('priority' => 0, 'callable' => $before('Event: View.afterLayout')),
-				array('priority' => 999, 'callable' => $after('Event: View.afterLayout'))
-			),
-		);
+		return [
+			'Controller.initialize' => [
+				['priority' => 0, 'callable' => $before('Event: Controller.initialize')],
+				['priority' => 999, 'callable' => $after('Event: Controller.initialize')]
+			],
+			'Controller.startup' => [
+				['priority' => 0, 'callable' => $before('Event: Controller.startup')],
+				['priority' => 999, 'callable' => $after('Event: Controller.startup')]
+			],
+			'Controller.beforeRender' => [
+				['priority' => 0, 'callable' => $before('Event: Controller.beforeRender')],
+				['priority' => 999, 'callable' => $after('Event: Controller.beforeRender')]
+			],
+			'Controller.shutdown' => [
+				['priority' => 0, 'callable' => $before('Event: Controller.shutdown')],
+				['priority' => 999, 'callable' => $after('Event: Controller.shutdown')]
+			],
+			'View.beforeRender' => [
+				['priority' => 0, 'callable' => $before('Event: View.beforeRender')],
+				['priority' => 999, 'callable' => $after('Event: View.beforeRender')]
+			],
+			'View.afterRender' => [
+				['priority' => 0, 'callable' => $before('Event: View.afterRender')],
+				['priority' => 999, 'callable' => $after('Event: View.afterRender')]
+			],
+			'View.beforeLayout' => [
+				['priority' => 0, 'callable' => $before('Event: View.beforeLayout')],
+				['priority' => 999, 'callable' => $after('Event: View.beforeLayout')]
+			],
+			'View.afterLayout' => [
+				['priority' => 0, 'callable' => $before('Event: View.afterLayout')],
+				['priority' => 999, 'callable' => $after('Event: View.afterLayout')]
+			],
+		];
 	}
 
 /**
@@ -333,11 +329,11 @@ class ToolbarComponent extends Component implements CakeEventListener {
 		$this->css = array_unique(array_merge($this->css, $vars['css']));
 		unset($vars['javascript'], $vars['css']);
 
-		$controller->set(array(
+		$controller->set([
 			'debugToolbarPanels' => $vars,
 			'debugToolbarJavascript' => $this->javascript,
 			'debugToolbarCss' => $this->css
-		));
+		]);
 
 		$isHtml = (
 			!isset($controller->request->params['ext']) ||
@@ -351,12 +347,12 @@ class ToolbarComponent extends Component implements CakeEventListener {
 		}
 
 		$controller->helpers[] = 'DebugKit.DebugTimer';
-		$controller->helpers['DebugKit.Toolbar'] = array(
+		$controller->helpers['DebugKit.Toolbar'] = [
 			'output' => sprintf('DebugKit.%sToolbar', $format),
 			'cacheKey' => $this->cacheKey,
 			'cacheConfig' => 'debug_kit',
 			'forceEnable' => $this->settings['forceEnable'],
-		);
+		];
 
 		DebugTimer::stop('processToolbar');
 		DebugMemory::record(__d('debug_kit', 'Controller render start'));
@@ -370,10 +366,7 @@ class ToolbarComponent extends Component implements CakeEventListener {
  */
 	public function loadState($key) {
 		$history = Cache::read($this->cacheKey, 'debug_kit');
-		if (isset($history[$key])) {
-			return $history[$key];
-		}
-		return array();
+		return $history[$key] ?? [];
 	}
 
 /**
@@ -385,11 +378,11 @@ class ToolbarComponent extends Component implements CakeEventListener {
 		if (Configure::read('Cache.disable') === true || Cache::config('debug_kit')) {
 			return;
 		}
-		$cache = array(
+		$cache = [
 			'duration' => $this->cacheDuration,
 			'engine' => 'File',
 			'path' => CACHE
-		);
+		];
 		if (isset($this->settings['cache'])) {
 			$cache = array_merge($cache, $this->settings['cache']);
 		}
@@ -403,7 +396,7 @@ class ToolbarComponent extends Component implements CakeEventListener {
  * @return array Array of all panel beforeRender().
  */
 	protected function _gatherVars(Controller $controller) {
-		$vars = array('javascript' => array(), 'css' => array());
+		$vars = ['javascript' => [], 'css' => []];
 		$panels = array_keys($this->panels);
 
 		foreach ($panels as $panelName) {
@@ -439,7 +432,7 @@ class ToolbarComponent extends Component implements CakeEventListener {
 	protected function _loadPanels($panels, $settings) {
 		foreach ($panels as $panel) {
 			$className = ucfirst($panel) . 'Panel';
-			list($plugin, $className) = pluginSplit($className, true);
+			[$plugin, $className] = pluginSplit($className, true);
 
 			App::uses($className, $plugin . 'Panel');
 			if (!class_exists($className)) {
@@ -448,7 +441,7 @@ class ToolbarComponent extends Component implements CakeEventListener {
 			}
 			$panelObj = new $className($settings);
 			if ($panelObj instanceof DebugPanel) {
-				list(, $panel) = pluginSplit($panel);
+				[, $panel] = pluginSplit($panel);
 				$this->panels[Inflector::underscore($panel)] = $panelObj;
 			}
 		}
@@ -468,7 +461,7 @@ class ToolbarComponent extends Component implements CakeEventListener {
 		}
 		$history = Cache::read($this->cacheKey, 'debug_kit');
 		if (empty($history)) {
-			$history = array();
+			$history = [];
 		}
 		if (count($history) == $this->panels['history']->history) {
 			array_pop($history);
@@ -482,11 +475,11 @@ class ToolbarComponent extends Component implements CakeEventListener {
 					$item instanceof PDO ||
 					$item instanceof SimpleXmlElement
 				) {
-					$item = 'Unserializable object - ' . get_class($item);
+					$item = 'Unserializable object - ' . $item::class;
 				} elseif ($item instanceof Exception) {
 					$item = sprintf(
 						'Unserializable object - %s. Error: %s in %s, line %s',
-						get_class($item),
+						$item::class,
 						$item,
 						$item->getMessage(),
 						$item->getFile(),

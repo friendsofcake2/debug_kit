@@ -29,7 +29,7 @@ class SimpleGraphHelper extends AppHelper {
  *
  * @var array
  */
-	public $helpers = array('Html');
+	public $helpers = ['Html'];
 
 /**
  * Default settings to be applied to each Simple Graph
@@ -43,11 +43,11 @@ class SimpleGraphHelper extends AppHelper {
  *
  * @var array
  */
-	protected $_defaultSettings = array(
+	protected $_defaultSettings = [
 		'max' => 100,
 		'width' => 350,
 		'valueType' => 'value',
-	);
+	];
 
 /**
  * Bar
@@ -57,7 +57,7 @@ class SimpleGraphHelper extends AppHelper {
  * @param array|\Graph $options Graph options.
  * @return string HTML graph.
  */
-	public function bar($value, $offset, $options = array()) {
+	public function bar($value, $offset, $options = []) {
 		$settings = array_merge($this->_defaultSettings, $options);
 		extract($settings);
 
@@ -75,12 +75,12 @@ class SimpleGraphHelper extends AppHelper {
 				$this->Html->div(
 					'debug-kit-graph-bar-value',
 					' ',
-					array(
+					[
 						'style' => "margin-left: {$graphOffset}px; width: {$graphValue}px",
 						'title' => __d('debug_kit', "Starting %sms into the request, taking %sms", $offset, $value),
-					)
+					]
 				),
-			array('style' => "width: {$width}px;"),
+			['style' => "width: {$width}px;"],
 			false
 		);
 	}

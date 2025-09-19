@@ -30,7 +30,7 @@ class WhitespaceShell extends Shell {
  */
 	public function main() {
 		$path = APP;
-		if (!empty($this->params['path']) && strpos($this->params['path'], '/') === 0) {
+		if (!empty($this->params['path']) && str_starts_with($this->params['path'], '/')) {
 			$path = $this->params['path'];
 		} elseif (!empty($this->params['path'])) {
 			$path .= $this->params['path'];
@@ -58,7 +58,7 @@ class WhitespaceShell extends Shell {
  */
 	public function trim() {
 		$path = APP;
-		if (!empty($this->params['path']) && strpos($this->params['path'], '/') === 0) {
+		if (!empty($this->params['path']) && str_starts_with($this->params['path'], '/')) {
 			$path = $this->params['path'];
 		} elseif (!empty($this->params['path'])) {
 			$path .= $this->params['path'];
@@ -85,9 +85,9 @@ class WhitespaceShell extends Shell {
  */
 	public function getOptionParser() {
 		$parser = parent::getOptionParser();
-		return $parser->addOption('path', array(
+		return $parser->addOption('path', [
 			'short' => 'p',
 			'help' => __d('cake_console', 'Absolute path or relative to APP.')
-		));
+		]);
 	}
 }

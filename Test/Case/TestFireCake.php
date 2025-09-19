@@ -30,7 +30,7 @@ class TestFireCake extends FireCake {
  *
  * @var array
  */
-	public $sentHeaders = array();
+	public $sentHeaders = [];
 
 /**
  * Send header
@@ -60,7 +60,7 @@ class TestFireCake extends FireCake {
  */
 	public static function reset() {
 		$_this = FireCake::getInstance();
-		$_this->sentHeaders = array();
+		$_this->sentHeaders = [];
 		$_this->_messageIndex = 1;
 	}
 }

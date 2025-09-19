@@ -40,7 +40,7 @@ class ToolbarHelperTestCase extends CakeTestCase {
  *
  * @var array
  */
-	public $fixtures = array('core.post');
+	public $fixtures = ['core.post'];
 
 /**
  * setUp
@@ -53,25 +53,25 @@ class ToolbarHelperTestCase extends CakeTestCase {
 		$db->fullDebug = true;
 
 		Configure::write('Cache.disable', false);
-		Router::connect('/', array('controller' => 'pages', 'action' => 'display', 'home'));
+		Router::connect('/', ['controller' => 'pages', 'action' => 'display', 'home']);
 		Router::parse('/');
 
 		$this->Controller = new Controller(null);
 		$this->View = new View($this->Controller);
-		$this->Toolbar = new ToolbarHelper($this->View, array(
+		$this->Toolbar = new ToolbarHelper($this->View, [
 			'output' => 'MockBackendHelper',
 			'cacheKey' => 'debug_kit_toolbar_test_case',
 			'cacheConfig' => 'default'
-		));
-		$this->Toolbar->MockBackend = $this->getMock('Helper', array('testMethod'), array($this->View));
+		]);
+		$this->Toolbar->MockBackend = $this->getMock('Helper', ['testMethod'], [$this->View]);
 
 		$this->_viewPaths = App::path('views');
-		App::build(array(
-			'View' => array(
+		App::build([
+			'View' => [
 				CAKE_CORE_INCLUDE_PATH . DS . 'Cake' . DS . 'Test' . DS . 'test_app' . DS . 'View' . DS,
 				APP . 'Plugin' . DS . 'DebugKit' . DS . 'View' . DS,
 				CAKE_CORE_INCLUDE_PATH . DS . 'Cake' . DS . 'View' . DS
-		)), true);
+		]], true);
 	}
 
 /**
@@ -91,7 +91,7 @@ class ToolbarHelperTestCase extends CakeTestCase {
  * @return void
  */
 	public function testCacheWrite() {
-		$result = $this->Toolbar->writeCache('test', array('stuff', 'to', 'cache'));
+		$result = $this->Toolbar->writeCache('test', ['stuff', 'to', 'cache']);
 		$this->assertTrue($result);
 	}
 
@@ -102,18 +102,18 @@ class ToolbarHelperTestCase extends CakeTestCase {
  * @return void
  */
 	public function testOnlyWritingToFirstElement() {
-		$values = array(
-			array('test' => array('content' => array('first', 'values'))),
-			array('test' => array('content' => array('second', 'values'))),
-		);
+		$values = [
+			['test' => ['content' => ['first', 'values']]],
+			['test' => ['content' => ['second', 'values']]],
+		];
 		Cache::write('debug_kit_toolbar_test_case', $values, 'default');
-		$this->Toolbar->writeCache('test', array('new', 'values'));
+		$this->Toolbar->writeCache('test', ['new', 'values']);
 
 		$result = $this->Toolbar->readCache('test');
-		$this->assertEquals($result, array('new', 'values'));
+		$this->assertEquals($result, ['new', 'values']);
 
 		$result = $this->Toolbar->readCache('test', 1);
-		$this->assertEquals($result, array('second', 'values'));
+		$this->assertEquals($result, ['second', 'values']);
 	}
 
 /**
@@ -122,17 +122,17 @@ class ToolbarHelperTestCase extends CakeTestCase {
  * @return void
  */
 	public function testCacheRead() {
-		$result = $this->Toolbar->writeCache('test', array('stuff', 'to', 'cache'));
+		$result = $this->Toolbar->writeCache('test', ['stuff', 'to', 'cache']);
 		$this->assertTrue($result, 'Cache write failed %s');
 
 		$result = $this->Toolbar->readCache('test');
-		$this->assertEquals($result, array('stuff', 'to', 'cache'), 'Cache value is wrong %s');
+		$this->assertEquals($result, ['stuff', 'to', 'cache'], 'Cache value is wrong %s');
 
-		$result = $this->Toolbar->writeCache('test', array('new', 'stuff'));
+		$result = $this->Toolbar->writeCache('test', ['new', 'stuff']);
 		$this->assertTrue($result, 'Cache write failed %s');
 
 		$result = $this->Toolbar->readCache('test');
-		$this->assertEquals($result, array('new', 'stuff'), 'Cache value is wrong %s');
+		$this->assertEquals($result, ['new', 'stuff'], 'Cache value is wrong %s');
 	}
 
 /**
@@ -141,9 +141,9 @@ class ToolbarHelperTestCase extends CakeTestCase {
  * @return void
  */
 	public function testNoCacheConfigPresent() {
-		$this->Toolbar = new ToolbarHelper($this->View, array('output' => 'MockBackendHelper'));
+		$this->Toolbar = new ToolbarHelper($this->View, ['output' => 'MockBackendHelper']);
 
-		$result = $this->Toolbar->writeCache('test', array('stuff', 'to', 'cache'));
+		$result = $this->Toolbar->writeCache('test', ['stuff', 'to', 'cache']);
 		$this->assertFalse($result, 'Writing to cache succeeded with no cache config %s');
 
 		$result = $this->Toolbar->readCache('test');
@@ -157,18 +157,18 @@ class ToolbarHelperTestCase extends CakeTestCase {
  * @return void
  */
 	public function testGetQueryLogs() {
-		$model = new CakeTestModel(array('table' => 'posts', 'alias' => 'Post'));
+		$model = new CakeTestModel(['table' => 'posts', 'alias' => 'Post']);
 		$model->find('all');
 		$model->find('first');
 
-		$result = $this->Toolbar->getQueryLogs($model->useDbConfig, array('cache' => false));
+		$result = $this->Toolbar->getQueryLogs($model->useDbConfig, ['cache' => false]);
 		$this->assertTrue(is_array($result));
 		$this->assertTrue(count($result) >= 2, 'Should be more than 2 queries in the log %s');
 		$this->assertTrue(isset($result['queries'][0]['actions']));
 
 		$model->find('first');
 		Cache::delete('debug_kit_toolbar_test_case', 'default');
-		$result = $this->Toolbar->getQueryLogs($model->useDbConfig, array('cache' => true));
+		$result = $this->Toolbar->getQueryLogs($model->useDbConfig, ['cache' => true]);
 
 		$cached = $this->Toolbar->readCache('sql_log');
 		$this->assertTrue(isset($cached[$model->useDbConfig]));

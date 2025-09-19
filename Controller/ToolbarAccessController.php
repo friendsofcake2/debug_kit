@@ -36,24 +36,24 @@ class ToolbarAccessController extends DebugKitAppController {
  *
  * @var array
  */
-	public $helpers = array(
-		'DebugKit.Toolbar' => array('output' => 'DebugKit.HtmlToolbar'),
+	public $helpers = [
+		'DebugKit.Toolbar' => ['output' => 'DebugKit.HtmlToolbar'],
 		'Js', 'Number', 'DebugKit.SimpleGraph'
-	);
+	];
 
 /**
  * Components
  *
  * @var array
  */
-	public $components = array('RequestHandler', 'DebugKit.Toolbar');
+	public $components = ['RequestHandler', 'DebugKit.Toolbar'];
 
 /**
  * Uses
  *
  * @var array
  */
-	public $uses = array('DebugKit.ToolbarAccess');
+	public $uses = ['DebugKit.ToolbarAccess'];
 
 /**
  * beforeFilter callback
@@ -61,7 +61,6 @@ class ToolbarAccessController extends DebugKitAppController {
  * @return void
  */
 	public function beforeFilter() {
-		parent::beforeFilter();
 		if (isset($this->Toolbar)) {
 			$this->Components->disable('Toolbar');
 		}
@@ -69,9 +68,9 @@ class ToolbarAccessController extends DebugKitAppController {
 		$this->helpers['DebugKit.Toolbar']['cacheConfig'] = 'debug_kit';
 
 		if (isset($this->Auth) && method_exists($this->Auth, 'mapActions')) {
-			$this->Auth->mapActions(array(
-				'read' => array('history_state', 'sql_explain')
-			));
+			$this->Auth->mapActions([
+				'read' => ['history_state', 'sql_explain']
+			]);
 		}
 	}
 

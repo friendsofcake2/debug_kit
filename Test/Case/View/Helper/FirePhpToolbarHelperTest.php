@@ -43,12 +43,12 @@ class FirePhpToolbarHelperTestCase extends CakeTestCase {
 		parent::setUp();
 
 		Router::connect('/:controller/:action');
-		Router::connect('/', array('controller' => 'pages', 'action' => 'display', 'home'));
+		Router::connect('/', ['controller' => 'pages', 'action' => 'display', 'home']);
 		Router::parse('/');
 
 		$this->Controller = new Controller($this->getMock('CakeRequest'), new CakeResponse());
 		$this->View = new View($this->Controller);
-		$this->Toolbar = new ToolbarHelper($this->View, array('output' => 'DebugKit.FirePhpToolbar'));
+		$this->Toolbar = new ToolbarHelper($this->View, ['output' => 'DebugKit.FirePhpToolbar']);
 		$this->Toolbar->FirePhpToolbar = new FirePhpToolbarHelper($this->View);
 
 		$this->firecake = FireCake::getInstance('TestFireCake');
@@ -61,12 +61,12 @@ class FirePhpToolbarHelperTestCase extends CakeTestCase {
  * @return void
  **/
 	public static function setupBeforeClass(): void {
-		App::build(array(
-			'View' => array(
+		App::build([
+			'View' => [
 				CAKE_CORE_INCLUDE_PATH . DS . 'Cake' . DS . 'Test' . DS . 'test_app' . DS . 'View' . DS,
 				APP . 'Plugin' . DS . 'DebugKit' . DS . 'View' . DS,
 				CAKE_CORE_INCLUDE_PATH . DS . 'Cake' . DS . 'View' . DS
-		)), true);
+		]], true);
 	}
 
 /**
@@ -95,7 +95,7 @@ class FirePhpToolbarHelperTestCase extends CakeTestCase {
  * @return void
  */
 	public function testMakeNeatArray() {
-		$this->Toolbar->makeNeatArray(array(1, 2, 3));
+		$this->Toolbar->makeNeatArray([1, 2, 3]);
 		$result = $this->firecake->sentHeaders;
 		$this->assertTrue(isset($result['X-Wf-1-1-1-1']));
 		$this->assertRegexp('/\[1,2,3\]/', $result['X-Wf-1-1-1-1']);
@@ -110,18 +110,18 @@ class FirePhpToolbarHelperTestCase extends CakeTestCase {
 		$this->Controller->viewPath = 'Posts';
 		$request = new CakeRequest('/posts/index');
 		$request->addParams(Router::parse($request->url));
-		$request->addPaths(array(
+		$request->addPaths([
 			'webroot' => '/',
 			'base' => '/',
 			'here' => '/posts/index',
-		));
+		]);
 		$this->Controller->setRequest($request);
 		$this->Controller->layout = 'default';
 		$this->Controller->uses = null;
-		$this->Controller->components = array('DebugKit.Toolbar');
+		$this->Controller->components = ['DebugKit.Toolbar'];
 		$this->Controller->constructClasses();
-		$this->Controller->Components->trigger('startup', array($this->Controller));
-		$this->Controller->Components->trigger('beforeRender', array($this->Controller));
+		$this->Controller->Components->trigger('startup', [$this->Controller]);
+		$this->Controller->Components->trigger('beforeRender', [$this->Controller]);
 		$result = $this->Controller->render();
 		$this->assertNotRegExp('/debug-toolbar/', (string)$result);
 		$result = $this->firecake->sentHeaders;

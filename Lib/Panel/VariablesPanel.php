@@ -31,6 +31,6 @@ class VariablesPanel extends DebugPanel {
 			$viewVars['debugToolbarJavascript'],
 			$viewVars['debugToolbarCss']
 		);
-		return array_merge($viewVars, array('$request->data' => $controller->request->data));
+		return array_merge($viewVars, ['$request->data' => $controller->request->data]);
 	}
 }

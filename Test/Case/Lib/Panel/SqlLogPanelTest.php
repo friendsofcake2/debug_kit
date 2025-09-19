@@ -29,7 +29,7 @@ class SqlLogPanelTest extends CakeTestCase {
  *
  * @var array
  */
-	public $fixtures = array('core.article');
+	public $fixtures = ['core.article'];
 
 /**
  * Setup
@@ -48,7 +48,7 @@ class SqlLogPanelTest extends CakeTestCase {
  */
 	public function testBeforeRender() {
 		$Article = ClassRegistry::init('Article');
-		$Article->find('first', array('conditions' => array('Article.id' => 1)));
+		$Article->find('first', ['conditions' => ['Article.id' => 1]]);
 
 		$controller = new Controller();
 		$result = $this->panel->beforeRender($controller);

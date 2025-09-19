@@ -27,7 +27,7 @@ class FirePhpToolbarHelper extends ToolbarHelper {
  *
  * @var array
  */
-	public $settings = array('format' => 'firePHP', 'forceEnable' => false);
+	public $settings = ['format' => 'firePHP', 'forceEnable' => false];
 
 /**
  * send method
@@ -36,7 +36,7 @@ class FirePhpToolbarHelper extends ToolbarHelper {
  */
 	public function send() {
 		$view = $this->_View;
-		$view->element('debug_toolbar', array('disableTimer' => true), array('plugin' => 'DebugKit'));
+		$view->element('debug_toolbar', ['disableTimer' => true], ['plugin' => 'DebugKit']);
 	}
 
 /**
@@ -70,7 +70,7 @@ class FirePhpToolbarHelper extends ToolbarHelper {
  * @param array $options Additional options and params
  * @return void
  */
-	public function table($rows, $headers, $options = array()) {
+	public function table($rows, $headers, $options = []) {
 		$title = $headers[0];
 		if (isset($options['title'])) {
 			$title = $options['title'];

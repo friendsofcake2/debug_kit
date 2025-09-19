@@ -26,14 +26,14 @@ class TimedBehavior extends ModelBehavior {
  *
  * @var array
  */
-	public $settings = array();
+	public $settings = [];
 
 /**
  * Default setting values
  *
  * @var array
  */
-	protected $_defaults = array();
+	protected $_defaults = [];
 
 /**
  * Setup the behavior and import required classes.
@@ -82,7 +82,7 @@ class TimedBehavior extends ModelBehavior {
  * @param array $options The options.
  * @return bool Always true.
  */
-	public function beforeSave(Model $Model, $options = array()) {
+	public function beforeSave(Model $Model, $options = []) {
 		DebugTimer::start($Model->alias . '_save', $Model->alias . '->save()');
 		return true;
 	}
@@ -95,7 +95,7 @@ class TimedBehavior extends ModelBehavior {
  * @param array $options The options.
  * @return bool Always true.
  */
-	public function afterSave(Model $Model, $created, $options = array()) {
+	public function afterSave(Model $Model, $created, $options = []) {
 		DebugTimer::stop($Model->alias . '_save');
 		return true;
 	}

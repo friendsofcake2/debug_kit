@@ -34,9 +34,9 @@ class SqlLogPanel extends DebugPanel {
  */
 	public function beforeRender(Controller $controller) {
 		if (!class_exists('ConnectionManager')) {
-			return array();
+			return [];
 		}
-		$connections = array();
+		$connections = [];
 
 		$dbConfigs = ConnectionManager::sourceList();
 		foreach ($dbConfigs as $configName) {
@@ -58,6 +58,6 @@ class SqlLogPanel extends DebugPanel {
 			}
 			$connections[$configName] = $explain;
 		}
-		return array('connections' => $connections, 'threshold' => $this->slowRate);
+		return ['connections' => $connections, 'threshold' => $this->slowRate];
 	}
 }

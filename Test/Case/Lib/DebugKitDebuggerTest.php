@@ -58,7 +58,7 @@ class DebugKitDebuggerTest extends CakeTestCase {
  */
 	public function testOutput() {
 		Debugger::getInstance('DebugKitDebugger');
-		Debugger::addFormat('fb', array('callback' => 'DebugKitDebugger::fireError'));
+		Debugger::addFormat('fb', ['callback' => 'DebugKitDebugger::fireError']);
 		Debugger::outputAs('fb');
 
 		set_error_handler('ErrorHandler::handleError');

@@ -68,7 +68,7 @@ class FireCakeTestCase extends CakeTestCase {
  * @return void
  */
 	public function testSetOptions() {
-		FireCake::setOptions(array('includeLineNumbers' => false));
+		FireCake::setOptions(['includeLineNumbers' => false]);
 		$this->assertEquals($this->firecake->options['includeLineNumbers'], false);
 	}
 
@@ -78,7 +78,7 @@ class FireCakeTestCase extends CakeTestCase {
  * @return void
  */
 	public function testLog() {
-		FireCake::setOptions(array('includeLineNumbers' => false));
+		FireCake::setOptions(['includeLineNumbers' => false]);
 		FireCake::log('Testing');
 		$this->assertTrue(isset($this->firecake->sentHeaders['X-Wf-Protocol-1']));
 		$this->assertTrue(isset($this->firecake->sentHeaders['X-Wf-1-Plugin-1']));
@@ -96,7 +96,7 @@ class FireCakeTestCase extends CakeTestCase {
  * @return void
  */
 	public function testInfo() {
-		FireCake::setOptions(array('includeLineNumbers' => false));
+		FireCake::setOptions(['includeLineNumbers' => false]);
 		FireCake::info('I have information');
 		$this->assertTrue(isset($this->firecake->sentHeaders['X-Wf-Protocol-1']));
 		$this->assertTrue(isset($this->firecake->sentHeaders['X-Wf-1-Plugin-1']));
@@ -114,7 +114,7 @@ class FireCakeTestCase extends CakeTestCase {
  * @return void
  */
 	public function testWarn() {
-		FireCake::setOptions(array('includeLineNumbers' => false));
+		FireCake::setOptions(['includeLineNumbers' => false]);
 		FireCake::warn('A Warning');
 		$this->assertTrue(isset($this->firecake->sentHeaders['X-Wf-Protocol-1']));
 		$this->assertTrue(isset($this->firecake->sentHeaders['X-Wf-1-Plugin-1']));
@@ -132,7 +132,7 @@ class FireCakeTestCase extends CakeTestCase {
  * @return void
  */
 	public function testError() {
-		FireCake::setOptions(array('includeLineNumbers' => false));
+		FireCake::setOptions(['includeLineNumbers' => false]);
 		FireCake::error('An error');
 		$this->assertTrue(isset($this->firecake->sentHeaders['X-Wf-Protocol-1']));
 		$this->assertTrue(isset($this->firecake->sentHeaders['X-Wf-1-Plugin-1']));
@@ -150,7 +150,7 @@ class FireCakeTestCase extends CakeTestCase {
  * @return void
  */
 	public function testDump() {
-		FireCake::dump('mydump', array('one' => 1, 'two' => 2));
+		FireCake::dump('mydump', ['one' => 1, 'two' => 2]);
 		$this->assertEquals($this->firecake->sentHeaders['X-Wf-1-2-1-1'], '28|{"mydump":{"one":1,"two":2}}|');
 		$this->assertTrue(isset($this->firecake->sentHeaders['X-Wf-1-Structure-2']));
 	}
@@ -161,10 +161,10 @@ class FireCakeTestCase extends CakeTestCase {
  * @return void
  */
 	public function testTable() {
-		$table[] = array('Col 1 Heading', 'Col 2 Heading');
-		$table[] = array('Row 1 Col 1', 'Row 1 Col 2');
-		$table[] = array('Row 2 Col 1', 'Row 2 Col 2');
-		$table[] = array('Row 3 Col 1', 'Row 3 Col 2');
+		$table[] = ['Col 1 Heading', 'Col 2 Heading'];
+		$table[] = ['Row 1 Col 1', 'Row 1 Col 2'];
+		$table[] = ['Row 2 Col 1', 'Row 2 Col 2'];
+		$table[] = ['Row 3 Col 1', 'Row 3 Col 2'];
 		FireCake::table('myTrace', $table);
 		$expected = '162|[{"Type":"TABLE","Label":"myTrace"},[["Col 1 Heading","Col 2 Heading"],["Row 1 Col 1","Row 1 Col 2"],["Row 2 Col 1","Row 2 Col 2"],["Row 3 Col 1","Row 3 Col 2"]]]|';
 		$this->assertEquals($this->firecake->sentHeaders['X-Wf-1-1-1-1'], $expected);
@@ -176,14 +176,14 @@ class FireCakeTestCase extends CakeTestCase {
  * @return void
  */
 	public function testStringEncode() {
-		$vars = array(1, 2, 3);
+		$vars = [1, 2, 3];
 		$result = $this->firecake->stringEncode($vars);
-		$this->assertEquals($result, array(1, 2, 3));
+		$this->assertEquals($result, [1, 2, 3]);
 
-		$this->firecake->setOptions(array('maxArrayDepth' => 3));
-		$deep = array(1 => array(2 => array(3)));
+		$this->firecake->setOptions(['maxArrayDepth' => 3]);
+		$deep = [1 => [2 => [3]]];
 		$result = $this->firecake->stringEncode($deep);
-		$this->assertEquals($result, array(1 => array(2 => '** Max Array Depth (3) **')));
+		$this->assertEquals($result, [1 => [2 => '** Max Array Depth (3) **']]);
 	}
 
 /**
@@ -252,7 +252,7 @@ class FireCakeTestCase extends CakeTestCase {
  * @return void
  */
 	public function testIncludeLineNumbers() {
-		FireCake::setOptions(array('includeLineNumbers' => true));
+		FireCake::setOptions(['includeLineNumbers' => true]);
 		FireCake::info('Testing');
 		$result = $this->firecake->sentHeaders['X-Wf-1-1-1-1'];
 		$this->assertRegexp('/"File"\:".*FireCakeTest.php/', $result);
@@ -265,7 +265,7 @@ class FireCakeTestCase extends CakeTestCase {
  * @return void
  */
 	public function testGroup() {
-		FireCake::setOptions(array('includeLineNumbers' => false));
+		FireCake::setOptions(['includeLineNumbers' => false]);
 		FireCake::group('test');
 		FireCake::info('my info');
 		FireCake::groupEnd();
@@ -280,7 +280,7 @@ class FireCakeTestCase extends CakeTestCase {
  * @return void
  */
 	public function testFbParameterParsing() {
-		FireCake::setOptions(array('includeLineNumbers' => false));
+		FireCake::setOptions(['includeLineNumbers' => false]);
 		FireCake::fb('Test');
 		$this->assertEquals($this->firecake->sentHeaders['X-Wf-1-1-1-1'], '23|[{"Type":"LOG"},"Test"]|');
 
@@ -302,7 +302,7 @@ class FireCakeTestCase extends CakeTestCase {
  * @return void
  */
 	public function testIncorrectMessageType() {
-		FireCake::setOptions(array('includeLineNumbers' => false));
+		FireCake::setOptions(['includeLineNumbers' => false]);
 		FireCake::fb('Hello World', 'foobared');
 		$this->assertEquals($this->firecake->sentHeaders['X-Wf-1-1-1-1'], '30|[{"Type":"LOG"},"Hello World"]|');
 	}
@@ -331,11 +331,11 @@ class FireCakeTestCase extends CakeTestCase {
  * @return void
  */
 	public function testNonNativeEncoding() {
-		FireCake::setOptions(array('useNativeJsonEncode' => false));
-		$json = FireCake::jsonEncode(array('one' => 1, 'two' => 2));
+		FireCake::setOptions(['useNativeJsonEncode' => false]);
+		$json = FireCake::jsonEncode(['one' => 1, 'two' => 2]);
 		$this->assertEquals($json, '{"one":1,"two":2}');
 
-		$json = FireCake::jsonEncode(array(1, 2, 3));
+		$json = FireCake::jsonEncode([1, 2, 3]);
 		$this->assertEquals($json, '[1,2,3]');
 
 		$json = FireCake::jsonEncode(FireCake::getInstance());

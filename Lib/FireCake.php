@@ -45,26 +45,26 @@ class FireCake {
  * @see _defaultOptions and setOptions();
  * @var string
  */
-	public $options = array();
+	public $options = [];
 
 /**
  * Default Options used in CakeFirePhp
  *
  * @var string
  */
-	protected $_defaultOptions = array(
+	protected $_defaultOptions = [
 		'maxObjectDepth' => 10,
 		'maxArrayDepth' => 20,
 		'useNativeJsonEncode' => true,
 		'includeLineNumbers' => true,
-	);
+	];
 
 /**
  * Message Levels for messages sent via FirePHP
  *
  * @var array
  */
-	protected $_levels = array(
+	protected $_levels = [
 		'log' => 'LOG',
 		'info' => 'INFO',
 		'warn' => 'WARN',
@@ -75,7 +75,7 @@ class FireCake {
 		'table' => 'TABLE',
 		'groupStart' => 'GROUP_START',
 		'groupEnd' => 'GROUP_END',
-	);
+	];
 
 /**
  * Version number for X-Wf-1-Plugin-1 HTML header
@@ -96,14 +96,14 @@ class FireCake {
  *
  * @var array
  */
-	protected $_encodedObjects = array();
+	protected $_encodedObjects = [];
 
 /**
  * methodIndex to include in tracebacks when using includeLineNumbers
  *
  * @var array
  */
-	protected $_methodIndex = array('info', 'log', 'warn', 'error', 'table', 'trace');
+	protected $_methodIndex = ['info', 'log', 'warn', 'error', 'table', 'trace'];
 
 /**
  * FireCake output status
@@ -119,9 +119,9 @@ class FireCake {
  * @return FireCake
  */
 	public static function getInstance($class = null) {
-		static $instance = array();
+		static $instance = [];
 		if (!empty($class)) {
-			if (!$instance || strtolower($class) !== strtolower(get_class($instance[0]))) {
+			if (!$instance || strtolower($class) !== strtolower($instance[0]::class)) {
 				$instance[0] = new $class();
 				$instance[0]->setOptions();
 			}
@@ -139,7 +139,7 @@ class FireCake {
  * @param array $options Array of options to set.
  * @return void
  */
-	public static function setOptions($options = array()) {
+	public static function setOptions($options = []) {
 		$_this = FireCake::getInstance();
 		if (empty($_this->options)) {
 			$_this->options = array_merge($_this->_defaultOptions, $options);
@@ -336,7 +336,7 @@ class FireCake {
 			$type = $_this->_levels['log'];
 		}
 
-		$meta = array();
+		$meta = [];
 		$skipFinalObjectEncode = false;
 		if ($type == $_this->_levels['trace']) {
 			$trace = debug_backtrace();
@@ -358,7 +358,7 @@ class FireCake {
 					);
 					if ($selfCall) {
 						$meta['File'] = isset($trace[$i]['file']) ? Debugger::trimPath($trace[$i]['file']) : '';
-						$meta['Line'] = isset($trace[$i]['line']) ? $trace[$i]['line'] : '';
+						$meta['Line'] = $trace[$i]['line'] ?? '';
 						break;
 					}
 				}
@@ -421,21 +421,21 @@ class FireCake {
  * @return array
  */
 	protected static function _parseTrace($trace, $messageName) {
-		$message = array();
+		$message = [];
 		for ($i = 0, $len = count($trace); $i < $len; $i++) {
 			$keySet = (isset($trace[$i]['class']) && isset($trace[$i]['function']));
 			$selfCall = ($keySet && $trace[$i]['class'] === 'FireCake');
 			if (!$selfCall) {
-				$message = array(
-					'Class' => isset($trace[$i]['class']) ? $trace[$i]['class'] : '',
-					'Type' => isset($trace[$i]['type']) ? $trace[$i]['type'] : '',
-					'Function' => isset($trace[$i]['function']) ? $trace[$i]['function'] : '',
+				$message = [
+					'Class' => $trace[$i]['class'] ?? '',
+					'Type' => $trace[$i]['type'] ?? '',
+					'Function' => $trace[$i]['function'] ?? '',
 					'Message' => $messageName,
 					'File' => isset($trace[$i]['file']) ? Debugger::trimPath($trace[$i]['file']) : '',
-					'Line' => isset($trace[$i]['line']) ? $trace[$i]['line'] : '',
+					'Line' => $trace[$i]['line'] ?? '',
 					'Args' => isset($trace[$i]['args']) ? FireCake::stringEncode($trace[$i]['args']) : '',
 					'Trace' => FireCake::_escapeTrace(array_splice($trace, $i + 1))
-				);
+				];
 				break;
 			}
 		}
@@ -471,7 +471,7 @@ class FireCake {
  */
 	public static function stringEncode($object, $objectDepth = 1, $arrayDepth = 1) {
 		$_this = FireCake::getInstance();
-		$return = array();
+		$return = [];
 		if (is_resource($object)) {
 			return '** ' . (string)$object . '**';
 		}
@@ -481,12 +481,12 @@ class FireCake {
 			}
 			foreach ($_this->_encodedObjects as $encoded) {
 				if ($encoded === $object) {
-					return '** Recursion (' . get_class($object) . ') **';
+					return '** Recursion (' . $object::class . ') **';
 				}
 			}
 			$_this->_encodedObjects[] = $object;
 
-			$return['__className'] = $class = get_class($object);
+			$return['__className'] = $class = $object::class;
 			$properties = get_object_vars($object);
 			foreach ($properties as $name => $property) {
 				$return[$name] = FireCake::stringEncode($property, 1, $objectDepth + 1);

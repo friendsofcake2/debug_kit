@@ -30,14 +30,14 @@ class HtmlToolbarHelper extends ToolbarHelper {
  *
  * @var array
  */
-	public $helpers = array('Html', 'Form');
+	public $helpers = ['Html', 'Form'];
 
 /**
  * settings property
  *
  * @var array
  */
-	public $settings = array('format' => 'html', 'forceEnable' => false);
+	public $settings = ['format' => 'html', 'forceEnable' => false];
 
 /**
  * Recursively goes through an array and makes neat HTML out of it.
@@ -61,10 +61,10 @@ class HtmlToolbarHelper extends ToolbarHelper {
 		$out = "<ul class=\"$className\">";
 		if (!is_array($values)) {
 			if (is_bool($values)) {
-				$values = array($values);
+				$values = [$values];
 			}
 			if ($values === null) {
-				$values = array(null);
+				$values = [null];
 			}
 		}
 		if (empty($values)) {
@@ -153,12 +153,12 @@ class HtmlToolbarHelper extends ToolbarHelper {
  * @param array $headers Optional header row.
  * @return string
  */
-	public function table($rows, $headers = array()) {
+	public function table($rows, $headers = []) {
 		$out = '<table class="debug-table">';
 		if (!empty($headers)) {
 			$out .= $this->Html->tableHeaders($headers);
 		}
-		$out .= $this->Html->tableCells($rows, array('class' => 'odd'), array('class' => 'even'), false, false);
+		$out .= $this->Html->tableCells($rows, ['class' => 'odd'], ['class' => 'even'], false, false);
 		$out .= '</table>';
 		return $out;
 	}
@@ -193,7 +193,7 @@ class HtmlToolbarHelper extends ToolbarHelper {
 		if ($pos !== false) {
 			$view->output = substr_replace($view->output, $head . "\n</head>", $pos, strlen($search));
 		}
-		$toolbar = $view->element('debug_toolbar', array('disableTimer' => true), array('plugin' => 'DebugKit'));
+		$toolbar = $view->element('debug_toolbar', ['disableTimer' => true], ['plugin' => 'DebugKit']);
 		$search = '</body>';
 		$pos = strrpos($view->output, $search);
 		if ($pos !== false) {
@@ -212,26 +212,26 @@ class HtmlToolbarHelper extends ToolbarHelper {
 		if (!preg_match('/^[\s()]*SELECT/i', $sql)) {
 			return '';
 		}
-		$sql = str_replace(array("\n", "\t"), ' ', $sql);
+		$sql = str_replace(["\n", "\t"], ' ', $sql);
 		$hash = Security::hash($sql . $connection, 'sha1', true);
-		$url = array(
+		$url = [
 			'plugin' => 'DebugKit',
 			'controller' => 'ToolbarAccess',
 			'action' => 'sql_explain'
-		);
+		];
 		foreach (Router::prefixes() as $prefix) {
 			$url[$prefix] = false;
 		}
 		$this->explainLinkUid = (isset($this->explainLinkUid) ? $this->explainLinkUid + 1 : 0);
-		$uid = $this->explainLinkUid . '_' . rand(0, 10000);
-		$form = $this->Form->create('log', array('url' => $url, 'id' => "logForm{$uid}"));
-		$form .= $this->Form->hidden('log.ds', array('id' => "logDs{$uid}", 'value' => $connection));
-		$form .= $this->Form->hidden('log.sql', array('id' => "logSql{$uid}", 'value' => $sql));
-		$form .= $this->Form->hidden('log.hash', array('id' => "logHash{$uid}", 'value' => $hash));
-		$form .= $this->Form->submit(__d('debug_kit', 'Explain'), array(
+		$uid = $this->explainLinkUid . '_' . random_int(0, 10000);
+		$form = $this->Form->create('log', ['url' => $url, 'id' => "logForm{$uid}"]);
+		$form .= $this->Form->hidden('log.ds', ['id' => "logDs{$uid}", 'value' => $connection]);
+		$form .= $this->Form->hidden('log.sql', ['id' => "logSql{$uid}", 'value' => $sql]);
+		$form .= $this->Form->hidden('log.hash', ['id' => "logHash{$uid}", 'value' => $hash]);
+		$form .= $this->Form->submit(__d('debug_kit', 'Explain'), [
 			'div' => false,
 			'class' => 'sql-explain-link'
-		));
+		]);
 		$form .= $this->Form->end();
 		return $form;
 	}

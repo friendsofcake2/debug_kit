@@ -29,7 +29,7 @@ class ToolbarHelper extends AppHelper {
  *
  * @var array
  */
-	public $settings = array();
+	public $settings = [];
 
 /**
  * flag for whether or not cache is enabled.
@@ -45,8 +45,8 @@ class ToolbarHelper extends AppHelper {
  * @param array|string $options The options.
  * @return \ToolbarHelper
  */
-	public function __construct($View, $options = array()) {
-		$this->_myName = strtolower(get_class($this));
+	public function __construct($View, $options = []) {
+		$this->_myName = strtolower(static::class);
 		$this->settings = array_merge($this->settings, $options);
 
 		if ($this->_myName !== 'toolbarhelper') {
@@ -58,8 +58,8 @@ class ToolbarHelper extends AppHelper {
 			$options['output'] = 'DebugKit.HtmlToolbar';
 		}
 		$className = $options['output'];
-		if (strpos($options['output'], '.') !== false) {
-			list($plugin, $className) = explode('.', $options['output']);
+		if (str_contains($options['output'], '.')) {
+			[$plugin, $className] = explode('.', $options['output']);
 		}
 		$this->_backEndClassName = $className;
 		$this->helpers[$options['output']] = $options;
@@ -160,23 +160,23 @@ class ToolbarHelper extends AppHelper {
  * @param array $options Options for the query log retrieval.
  * @return array Array of data to be converted into a table.
  */
-	public function getQueryLogs($connection, $options = array()) {
-		$options += array('explain' => false, 'cache' => true, 'threshold' => 20);
+	public function getQueryLogs($connection, $options = []) {
+		$options += ['explain' => false, 'cache' => true, 'threshold' => 20];
 		$db = ConnectionManager::getDataSource($connection);
 
 		if (!method_exists($db, 'getLog')) {
-			return array();
+			return [];
 		}
 
 		$log = $db->getLog();
 
-		$out = array(
-			'queries' => array(),
+		$out = [
+			'queries' => [],
 			'count' => $log['count'],
 			'time' => $log['time']
-		);
+		];
 		foreach ($log['log'] as $i => $query) {
-			$query += array('query' => null);
+			$query += ['query' => null];
 			$isSlow = (
 				$query['took'] > 0 &&
 				$query['numRows'] / $query['took'] != 1 &&

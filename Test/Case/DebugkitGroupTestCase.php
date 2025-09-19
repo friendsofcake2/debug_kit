@@ -24,7 +24,7 @@ class DebugKitGroupTestCase extends \PHPUnit\Framework\TestSuite {
  * Constructor
  */
 	public function __construct() {
-		$label = Inflector::humanize(Inflector::underscore(get_class($this)));
+		$label = Inflector::humanize(Inflector::underscore(static::class));
 		parent::__construct($label);
 	}
 
@@ -37,7 +37,7 @@ class DebugKitGroupTestCase extends \PHPUnit\Framework\TestSuite {
  */
 	public static function getTestFiles($directory = null, $excludes = null) {
 		if (is_array($directory)) {
-			$files = array();
+			$files = [];
 			foreach ($directory as $d) {
 				$files = array_merge($files, self::getTestFiles($d, $excludes));
 			}
@@ -54,7 +54,7 @@ class DebugKitGroupTestCase extends \PHPUnit\Framework\TestSuite {
 
 		$it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($directory));
 
-		$files = array();
+		$files = [];
 		while ($it->valid()) {
 
 			if (!$it->isDot()) {

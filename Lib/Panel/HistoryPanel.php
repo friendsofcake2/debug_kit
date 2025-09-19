@@ -46,9 +46,9 @@ class HistoryPanel extends DebugPanel {
 	public function beforeRender(Controller $controller) {
 		$cacheKey = $controller->Toolbar->cacheKey;
 		$toolbarHistory = Cache::read($cacheKey, 'debug_kit');
-		$historyStates = array();
+		$historyStates = [];
 		if (is_array($toolbarHistory) && !empty($toolbarHistory)) {
-			$prefix = array();
+			$prefix = [];
 			if (!empty($controller->request->params['prefix'])) {
 				$prefix[$controller->request->params['prefix']] = false;
 			}
@@ -64,14 +64,14 @@ class HistoryPanel extends DebugPanel {
 				if (!empty($query)) {
 					$title .= '?' . urldecode(http_build_query($query));
 				}
-				$historyStates[] = array(
+				$historyStates[] = [
 					'title' => $title,
-					'url' => array_merge($prefix, array(
+					'url' => array_merge($prefix, [
 						'plugin' => 'DebugKit',
 						'controller' => 'ToolbarAccess',
 						'action' => 'history_state',
-						$i + 1))
-				);
+						$i + 1])
+				];
 			}
 		}
 		if (count($historyStates) >= $this->history) {

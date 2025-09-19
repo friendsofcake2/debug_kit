@@ -27,14 +27,14 @@ class LogPanel extends DebugPanel {
 		parent::__construct();
 		$existing = CakeLog::configured();
 		if (empty($existing)) {
-			CakeLog::config('default', array(
+			CakeLog::config('default', [
 				'engine' => 'FileLog'
-			));
+			]);
 		}
-		CakeLog::config('debug_kit_log_panel', array(
+		CakeLog::config('debug_kit_log_panel', [
 			'engine' => 'DebugKit.DebugKitLog',
 			'panel' => $this
-		));
+		]);
 	}
 
 /**
