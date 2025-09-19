@@ -1,8 +1,8 @@
 {
     "name": "friendsofcake2/debug_kit",
-    "description": "CakePHP Debug Kit",
+    "description": "CakePHP 2 Debug Kit",
     "type": "cakephp-plugin",
-    "keywords": ["cakephp", "debug", "kit"],
+    "keywords": ["cakephp", "cakephp2", "debug", "kit"],
     "license": "MIT",
     "require": {
         "php": "^8.0",

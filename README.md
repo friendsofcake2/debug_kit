@@ -1,6 +1,13 @@
-# CakePHP DebugKit
+# CakePHP 2 DebugKit
 
-__This is forked for CakePHP2.__
+[![GitHub License](https://img.shields.io/github/license/friendsofcake2/debug_kit)](LICENSE)
+[![Packagist Version](https://img.shields.io/packagist/v/friendsofcake2/debug_kit)](https://packagist.org/packages/friendsofcake2/debug_kit)
+[![Packagist Dependency Version](https://img.shields.io/packagist/dependency-v/friendsofcake2/debug_kit/php)](https://packagist.org/packages/friendsofcake2/debug_kit)
+[![Packagist Dependency Version](https://img.shields.io/packagist/dependency-v/friendsofcake2/debug_kit/cakephp/cakephp)](https://packagist.org/packages/friendsofcake2/debug_kit)
+[![Tests](https://img.shields.io/github/actions/workflow/status/friendsofcake2/debug_kit/tests.yml?label=tests)](https://github.com/friendsofcake2/debug_kit/actions/workflows/tests.yml)
+[![Codecov](https://img.shields.io/codecov/c/gh/friendsofcake2/debug_kit)](https://codecov.io/gh/friendsofcake2/debug_kit)
+
+**This is forked for CakePHP2.**
 
 DebugKit provides a debugging toolbar and enhanced debugging tools for CakePHP applications.
 
@@ -8,18 +15,16 @@ DebugKit provides a debugging toolbar and enhanced debugging tools for CakePHP a
 
 The master branch has the following requirements:
 
-* CakePHP 2.2.0 or greater.
-* PHP 8.0.0 or greater.
+* CakePHP 2.10 or higher.
+* PHP 8.0 or higher.
 
 ## Installation
-
-_Using Composer_
 
 Install the plugin with [Composer](https://getcomposer.org/) from the directory, where
 your project's `composer.json` is located:
 
 ```
-php composer.phar require friendsofcake2/debug_kit "^2.2.0"
+composer require friendsofcake2/debug_kit "^2.2"
 ```
 
 > Consider using "--dev", if you only want to include DebugKit for your development environment.
@@ -28,31 +33,6 @@ Because this plugin has the type `cakephp-plugin` set in it's own `composer.json
 knows to install it inside your `/Plugin` directory, rather than in the usual vendors file.
 It is recommended that you add `/Plugin/DebugKit` to your .gitignore file. (Why?
 [read this](http://getcomposer.org/doc/faqs/should-i-commit-the-dependencies-in-my-vendor-directory.md).)
-
-_[Manual]_
-
-* Download the [DebugKit archive](https://github.com/friendsofcake2/debug_kit/zipball/2.2).
-* Unzip that download.
-* Rename the resulting folder to `DebugKit`
-* Then copy this folder into `app/Plugin/`
-
-_[GIT Submodule]_
-
-In your app directory type:
-
-```bash
-git submodule add --branch 2.2 git://github.com/friendsofcake2/debug_kit.git Plugin/DebugKit
-git submodule init
-git submodule update
-```
-
-_[GIT Clone]_
-
-In your plugin directory type
-
-```bash
-git clone --single-branch --branch 2.2 git://github.com/friendsofcake2/debug_kit.git DebugKit
-```
 
 ### Enable plugin
 
@@ -80,7 +60,7 @@ class AppController extends Controller {
 
 ## Reporting Issues
 
-If you have a problem with DebugKit please open an issue on [GitHub](https://github.com/cakephp/debug_kit/issues).
+If you have a problem with DebugKit please open an issue on [GitHub](https://github.com/friendsofcake2/debug_kit/issues).
 
 ## Contributing
 
@@ -97,21 +77,9 @@ DebugKit has several releases, each compatible with different releases of
 CakePHP. Use the appropriate version by downloading a tag, or checking out the
 correct branch.
 
-* `1.0, 1.1, 1.2` are compatible with CakePHP 1.2.x. These releases of DebugKit
-  will not work with CakePHP 1.3. You can also use the `1.2-branch` for the mos
-  recent updates and bugfixes.
-* `1.3.0` is compatible with CakePHP 1.3.x only. It will not work with CakePHP
-  1.2. You can also use the `1.3` branch to get the most recent updates and
-  bugfixes.
-* `2.0.0` is compatible with CakePHP 2.0.x only. It will not work with previous
-  CakePHP versions.
-* `2.2.0` is compatible with CakePHP 2.2.0 and greater. It will not work with
-  older versions of CakePHP as this release uses new API's available in 2.2.
 * `2.2.x` are compatible with CakePHP 2.2.0 and greater. It is a necessary
   upgrade for people using CakePHP 2.4 as the naming conventions around loggers
   changed in that release.
-* `3.x.x` are compatible with CakePHP 3.0.0 and greater. These versions are developed
-  in the ``master`` branch.
 
 # Documentation
 
