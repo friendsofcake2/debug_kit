@@ -22,3 +22,4 @@ tags
 phpunit.xml
 .phpunit.result.cache
 .phpunit.cache
+/rector.php
