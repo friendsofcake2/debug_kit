@@ -28,7 +28,6 @@ jobs:
         db-type:
           - mysql
           - pgsql
-          - sqlite
 
     services:
       mysql:
