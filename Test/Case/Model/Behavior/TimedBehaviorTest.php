@@ -23,7 +23,7 @@ App::uses('DebugKitDebugger', 'DebugKit.Lib');
  *
  * @since         DebugKit 1.3
  */
-class TimedBehaviorTestCase extends CakeTestCase {
+class TimedBehaviorTest extends CakeTestCase {
 
 /**
  * Fixtures

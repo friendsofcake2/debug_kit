@@ -32,7 +32,7 @@ require_once $path . 'Test' . DS . 'Case' . DS . 'TestFireCake.php';
  *
  * @since         DebugKit 0.1
  */
-class FirePhpToolbarHelperTestCase extends CakeTestCase {
+class FirePhpToolbarHelperTest extends CakeTestCase {
 
 /**
  * setUp
@@ -98,7 +98,7 @@ class FirePhpToolbarHelperTestCase extends CakeTestCase {
 		$this->Toolbar->makeNeatArray([1, 2, 3]);
 		$result = $this->firecake->sentHeaders;
 		$this->assertTrue(isset($result['X-Wf-1-1-1-1']));
-		$this->assertRegexp('/\[1,2,3\]/', $result['X-Wf-1-1-1-1']);
+		$this->assertMatchesRegularExpression('/\[1,2,3\]/', $result['X-Wf-1-1-1-1']);
 	}
 
 /**
@@ -123,7 +123,7 @@ class FirePhpToolbarHelperTestCase extends CakeTestCase {
 		$this->Controller->Components->trigger('startup', [$this->Controller]);
 		$this->Controller->Components->trigger('beforeRender', [$this->Controller]);
 		$result = $this->Controller->render();
-		$this->assertNotRegExp('/debug-toolbar/', (string)$result);
+		$this->assertDoesNotMatchRegularExpression('/debug-toolbar/', (string)$result);
 		$result = $this->firecake->sentHeaders;
 		$this->assertTrue(is_array($result));
 	}
@@ -136,7 +136,7 @@ class FirePhpToolbarHelperTestCase extends CakeTestCase {
 	public function testPanelStart() {
 		$this->Toolbar->panelStart('My Panel', 'my_panel');
 		$result = $this->firecake->sentHeaders;
-		$this->assertRegexp('/GROUP_START.+My Panel/', $result['X-Wf-1-1-1-1']);
+		$this->assertMatchesRegularExpression('/GROUP_START.+My Panel/', $result['X-Wf-1-1-1-1']);
 	}
 
 /**
@@ -147,6 +147,6 @@ class FirePhpToolbarHelperTestCase extends CakeTestCase {
 	public function testPanelEnd() {
 		$this->Toolbar->panelEnd();
 		$result = $this->firecake->sentHeaders;
-		$this->assertRegexp('/GROUP_END/', $result['X-Wf-1-1-1-1']);
+		$this->assertMatchesRegularExpression('/GROUP_END/', $result['X-Wf-1-1-1-1']);
 	}
 }

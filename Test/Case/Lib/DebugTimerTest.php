@@ -71,7 +71,7 @@ class DebugTimerTest extends CakeTestCase {
 
 		$this->assertCount(2, $timers);
 		$key = array_key_last($timers);
-		$lineNo = __LINE__ - 8;
+		$lineNo = __LINE__ - 7;
 
 		$file = Debugger::trimPath(__FILE__);
 		$expected = $file . ' line ' . $lineNo;

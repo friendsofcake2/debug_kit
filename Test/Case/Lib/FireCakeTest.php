@@ -24,7 +24,7 @@ require_once CakePlugin::path('DebugKit') . 'Test' . DS . 'Case' . DS . 'TestFir
  *
  * @since         DebugKit 0.1
  */
-class FireCakeTestCase extends CakeTestCase {
+class FireCakeTest extends CakeTestCase {
 
 /**
  * setup test
@@ -211,8 +211,8 @@ class FireCakeTestCase extends CakeTestCase {
 		$this->assertTrue(isset($this->firecake->sentHeaders['X-Wf-1-Plugin-1']));
 		$this->assertTrue(isset($this->firecake->sentHeaders['X-Wf-1-Structure-1']));
 		$dump = $this->firecake->sentHeaders['X-Wf-1-1-1-1'];
-		$this->assertRegexp('/"Message":"myTrace"/', $dump);
-		$this->assertRegexp('/"Trace":\[/', $dump);
+		$this->assertMatchesRegularExpression('/"Message":"myTrace"/', $dump);
+		$this->assertMatchesRegularExpression('/"Trace":\[/', $dump);
 	}
 
 /**
@@ -255,8 +255,8 @@ class FireCakeTestCase extends CakeTestCase {
 		FireCake::setOptions(['includeLineNumbers' => true]);
 		FireCake::info('Testing');
 		$result = $this->firecake->sentHeaders['X-Wf-1-1-1-1'];
-		$this->assertRegexp('/"File"\:".*FireCakeTest.php/', $result);
-		$this->assertRegexp('/"Line"\:\d+/', $result);
+		$this->assertMatchesRegularExpression('/"File"\:".*FireCakeTest.php/', $result);
+		$this->assertMatchesRegularExpression('/"Line"\:\d+/', $result);
 	}
 
 /**
@@ -290,8 +290,19 @@ class FireCakeTestCase extends CakeTestCase {
 		FireCake::fb('Test', 'Custom label', 'warn');
 		$this->assertEquals($this->firecake->sentHeaders['X-Wf-1-1-1-3'], '47|[{"Type":"WARN","Label":"Custom label"},"Test"]|');
 
-		$this->expectException(\PHPUnit\Framework\Error\Warning::class);
-		$this->assertFalse(FireCake::fb('Test', 'Custom label', 'warn', 'more parameters'));
+		$this->expectExceptionMessage('Incorrect parameter count for FireCake::fb()');
+
+        try {
+            set_error_handler(static function (int $errno, string $errstr) {
+                throw new Exception($errstr, $errno);
+            }, E_USER_WARNING);
+
+            FireCake::fb('Test', 'Custom label', 'warn', 'more parameters');
+        } finally {
+            restore_error_handler();
+        }
+
+        $this->assertFalse(FireCake::fb('Test', 'Custom label', 'warn', 'more parameters'));
 
 		$this->assertEquals($this->firecake->sentHeaders['X-Wf-1-Index'], 3);
 	}
@@ -339,7 +350,7 @@ class FireCakeTestCase extends CakeTestCase {
 		$this->assertEquals($json, '[1,2,3]');
 
 		$json = FireCake::jsonEncode(FireCake::getInstance());
-		$this->assertRegexp('/"options"\:\{"maxObjectDepth"\:\d*,/', $json);
+		$this->assertMatchesRegularExpression('/"options"\:\{"maxObjectDepth"\:\d*,/', $json);
 	}
 
 }

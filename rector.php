@@ -15,16 +15,9 @@ return RectorConfig::configure()
         __DIR__ . '/View',
     ])
     // uncomment to reach your current PHP version
-    // ->withPhpSets()
-    ->withPhpSets(php80: true)
+//    ->withPhpSets(php80: true)
 //    ->withSets([
-//        PHPUnitSetList::PHPUNIT_40,
-//        PHPUnitSetList::PHPUNIT_50,
-//        PHPUnitSetList::PHPUNIT_60,
-//        PHPUnitSetList::PHPUNIT_70,
-//        PHPUnitSetList::PHPUNIT_80,
-//        PHPUnitSetList::PHPUNIT_90,
-//        PHPUnitSetList::PHPUNIT_CODE_QUALITY,
+//        Rector\PHPUnit\Set\PHPUnitSetList::PHPUNIT_100,
 //    ])
 //    ->withTypeCoverageLevel(0)
 //    ->withDeadCodeLevel(0)

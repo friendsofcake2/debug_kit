@@ -33,7 +33,7 @@ class MockBackendHelper extends Helper {
 /**
  * Class ToolbarHelperTestCase
  */
-class ToolbarHelperTestCase extends CakeTestCase {
+class ToolbarHelperTest extends CakeTestCase {
 
 /**
  * Fixtures

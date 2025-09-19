@@ -46,7 +46,7 @@ class TestToolbarComponent extends ToolbarComponent {
 /**
  * ToolbarComponentTestCase Test case
  */
-class ToolbarComponentTestCase extends CakeTestCase {
+class ToolbarComponentTest extends CakeTestCase {
 
 /**
  * fixtures
@@ -149,15 +149,22 @@ class ToolbarComponentTestCase extends CakeTestCase {
 /**
  * Test exceptions on bad panel names
  *
- * @expectedException \PHPUnit\Framework\Error
- * @expectedExceptionMessage Undefined property: ToolbarComponentTestCase::$Controller
  * @return void
  */
 	public function testLoadPanelsError() {
         $this->_loadController();
 
-        $this->expectException(Error::class);
-		$this->Controller->Toolbar->loadPanels(['randomNonExisting', 'request']);
+        $this->expectExceptionMessageMatches('/^Could not load DebugToolbar panel /');
+
+        try {
+            set_error_handler(static function (int $errno, string $errstr) {
+                throw new Exception($errstr, $errno);
+            }, E_USER_WARNING);
+
+            $this->Controller->Toolbar->loadPanels(['randomNonExisting', 'request']);
+        } finally {
+            restore_error_handler();
+        }
 	}
 
 /**

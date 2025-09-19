@@ -23,7 +23,7 @@ App::uses('ToolbarAccess', 'DebugKit.Model');
  *
  * @since         DebugKit 1.3
  */
-class ToolbarAccessTestCase extends CakeTestCase {
+class ToolbarAccessTest extends CakeTestCase {
 
 /**
  * Included fixtures

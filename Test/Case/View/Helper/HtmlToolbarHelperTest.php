@@ -30,7 +30,7 @@ App::uses('FormHelper', 'View/Helper');
  *
  * @since         DebugKit 0.1
  */
-class HtmlToolbarHelperTestCase extends CakeTestCase {
+class HtmlToolbarHelperTest extends CakeTestCase {
 
 /**
  * Setup Test Case
@@ -333,7 +333,7 @@ class HtmlToolbarHelperTestCase extends CakeTestCase {
 		$this->Controller->Components->trigger('beforeRender', [$this->Controller]);
 		$result = $this->Controller->render();
 		$result = str_replace(["\n", "\r"], '', $result);
-		$this->assertRegexp('#<div id\="debug-kit-toolbar">.+</div>.*</body>#', $result);
+		$this->assertMatchesRegularExpression('#<div id\="debug-kit-toolbar">.+</div>.*</body>#', $result);
 	}
 
 /**
@@ -360,7 +360,7 @@ class HtmlToolbarHelperTestCase extends CakeTestCase {
 		$this->Controller->Components->trigger('beforeRender', [$this->Controller]);
 		$result = $this->Controller->render();
 		$result = str_replace(["\n", "\r"], '', $result);
-		$this->assertRegexp('#<script\s*type="text/javascript"\s*src="/debug_kit/js/js_debug_toolbar.js(?:\?\d*?)?"\s*>\s?</script>#', $result);
+		$this->assertMatchesRegularExpression('#<script\s*type="text/javascript"\s*src="/debug_kit/js/js_debug_toolbar.js(?:\?\d*?)?"\s*>\s?</script>#', $result);
 	}
 
 /**
