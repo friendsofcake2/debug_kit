@@ -1,4 +1,5 @@
 <?php
+
 /**
  * View Group Test for DebugKit
  *
@@ -15,6 +16,7 @@
  * @since         DebugKit 1.0
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
+use PHPUnit\Framework\TestSuite;
 
 require_once __DIR__ . DS . 'DebugkitGroupTestCase.php';
 
@@ -23,18 +25,19 @@ require_once __DIR__ . DS . 'DebugkitGroupTestCase.php';
  *
  * @since         DebugKit 1.0
  */
-class AllDebugKitViewTest extends DebugkitGroupTestCase {
+class AllDebugKitViewTest extends DebugkitGroupTestCase
+{
+    /**
+     * Assemble Test Suite
+     *
+     * @return \PHPUnit\Framework\TestSuite the instance of \PHPUnit\Framework\TestSuite
+     */
+    public static function suite(): TestSuite
+    {
+        $suite = new self();
+        $files = $suite->getTestFiles('View');
+        $suite->addTestFiles($files);
 
-/**
- * Assemble Test Suite
- *
- * @return \PHPUnit\Framework\TestSuite the instance of \PHPUnit\Framework\TestSuite
- */
-	public static function suite() {
-		$suite = new self;
-		$files = $suite->getTestFiles('View');
-		$suite->addTestFiles($files);
-
-		return $suite;
-	}
+        return $suite;
+    }
 }

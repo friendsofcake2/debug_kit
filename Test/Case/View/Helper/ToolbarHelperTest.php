@@ -27,152 +27,159 @@ App::uses('ConnectionManager', 'Manager');
  *
  * @since         DebugKit 0.1
  */
-class MockBackendHelper extends Helper {
+class MockBackendHelper extends Helper
+{
 }
 
 /**
  * Class ToolbarHelperTestCase
  */
-class ToolbarHelperTest extends CakeTestCase {
+class ToolbarHelperTest extends CakeTestCase
+{
+    /**
+     * Fixtures
+     *
+     * @var array
+     */
+    public $fixtures = ['core.post'];
 
-/**
- * Fixtures
- *
- * @var array
- */
-	public $fixtures = ['core.post'];
+    /**
+     * setUp
+     *
+     * @return void
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        $db = ConnectionManager::getDatasource('test');
+        $db->fullDebug = true;
 
-/**
- * setUp
- *
- * @return void
- */
-	public function setUp(): void {
-		parent::setUp();
-		$db = ConnectionManager::getDatasource('test');
-		$db->fullDebug = true;
+        Configure::write('Cache.disable', false);
+        Router::connect('/', ['controller' => 'pages', 'action' => 'display', 'home']);
+        Router::parse('/');
 
-		Configure::write('Cache.disable', false);
-		Router::connect('/', ['controller' => 'pages', 'action' => 'display', 'home']);
-		Router::parse('/');
+        $this->Controller = new Controller(null);
+        $this->View = new View($this->Controller);
+        $this->Toolbar = new ToolbarHelper($this->View, [
+            'output' => 'MockBackendHelper',
+            'cacheKey' => 'debug_kit_toolbar_test_case',
+            'cacheConfig' => 'default',
+        ]);
+        $this->Toolbar->MockBackend = $this->getMock('Helper', ['testMethod'], [$this->View]);
 
-		$this->Controller = new Controller(null);
-		$this->View = new View($this->Controller);
-		$this->Toolbar = new ToolbarHelper($this->View, [
-			'output' => 'MockBackendHelper',
-			'cacheKey' => 'debug_kit_toolbar_test_case',
-			'cacheConfig' => 'default'
-		]);
-		$this->Toolbar->MockBackend = $this->getMock('Helper', ['testMethod'], [$this->View]);
+        $this->_viewPaths = App::path('views');
+        App::build([
+            'View' => [
+                CAKE_CORE_INCLUDE_PATH . DS . 'Cake' . DS . 'Test' . DS . 'test_app' . DS . 'View' . DS,
+                APP . 'Plugin' . DS . 'DebugKit' . DS . 'View' . DS,
+                CAKE_CORE_INCLUDE_PATH . DS . 'Cake' . DS . 'View' . DS,
+            ]], true);
+    }
 
-		$this->_viewPaths = App::path('views');
-		App::build([
-			'View' => [
-				CAKE_CORE_INCLUDE_PATH . DS . 'Cake' . DS . 'Test' . DS . 'test_app' . DS . 'View' . DS,
-				APP . 'Plugin' . DS . 'DebugKit' . DS . 'View' . DS,
-				CAKE_CORE_INCLUDE_PATH . DS . 'Cake' . DS . 'View' . DS
-		]], true);
-	}
+    /**
+     * tearDown
+     *
+     * @return void
+     */
+    public function tearDown(): void
+    {
+        parent::tearDown();
+        Cache::delete('debug_kit_toolbar_test_case', 'default');
+        unset($this->Toolbar, $this->Controller);
+    }
 
-/**
- * tearDown
- *
- * @return void
- */
-	public function tearDown(): void {
-		parent::tearDown();
-		Cache::delete('debug_kit_toolbar_test_case', 'default');
-		unset($this->Toolbar, $this->Controller);
-	}
+    /**
+     * test cache writing for views.
+     *
+     * @return void
+     */
+    public function testCacheWrite(): void
+    {
+        $result = $this->Toolbar->writeCache('test', ['stuff', 'to', 'cache']);
+        $this->assertTrue($result);
+    }
 
-/**
- * test cache writing for views.
- *
- * @return void
- */
-	public function testCacheWrite() {
-		$result = $this->Toolbar->writeCache('test', ['stuff', 'to', 'cache']);
-		$this->assertTrue($result);
-	}
+    /**
+     * Ensure that the cache writing only affects the
+     * top most level of the history stack. As this is where the current request is stored.
+     *
+     * @return void
+     */
+    public function testOnlyWritingToFirstElement(): void
+    {
+        $values = [
+            ['test' => ['content' => ['first', 'values']]],
+            ['test' => ['content' => ['second', 'values']]],
+        ];
+        Cache::write('debug_kit_toolbar_test_case', $values, 'default');
+        $this->Toolbar->writeCache('test', ['new', 'values']);
 
-/**
- * Ensure that the cache writing only affects the
- * top most level of the history stack. As this is where the current request is stored.
- *
- * @return void
- */
-	public function testOnlyWritingToFirstElement() {
-		$values = [
-			['test' => ['content' => ['first', 'values']]],
-			['test' => ['content' => ['second', 'values']]],
-		];
-		Cache::write('debug_kit_toolbar_test_case', $values, 'default');
-		$this->Toolbar->writeCache('test', ['new', 'values']);
+        $result = $this->Toolbar->readCache('test');
+        $this->assertEquals($result, ['new', 'values']);
 
-		$result = $this->Toolbar->readCache('test');
-		$this->assertEquals($result, ['new', 'values']);
+        $result = $this->Toolbar->readCache('test', 1);
+        $this->assertEquals($result, ['second', 'values']);
+    }
 
-		$result = $this->Toolbar->readCache('test', 1);
-		$this->assertEquals($result, ['second', 'values']);
-	}
+    /**
+     * test cache reading for views
+     *
+     * @return void
+     */
+    public function testCacheRead(): void
+    {
+        $result = $this->Toolbar->writeCache('test', ['stuff', 'to', 'cache']);
+        $this->assertTrue($result, 'Cache write failed %s');
 
-/**
- * test cache reading for views
- *
- * @return void
- */
-	public function testCacheRead() {
-		$result = $this->Toolbar->writeCache('test', ['stuff', 'to', 'cache']);
-		$this->assertTrue($result, 'Cache write failed %s');
+        $result = $this->Toolbar->readCache('test');
+        $this->assertEquals($result, ['stuff', 'to', 'cache'], 'Cache value is wrong %s');
 
-		$result = $this->Toolbar->readCache('test');
-		$this->assertEquals($result, ['stuff', 'to', 'cache'], 'Cache value is wrong %s');
+        $result = $this->Toolbar->writeCache('test', ['new', 'stuff']);
+        $this->assertTrue($result, 'Cache write failed %s');
 
-		$result = $this->Toolbar->writeCache('test', ['new', 'stuff']);
-		$this->assertTrue($result, 'Cache write failed %s');
+        $result = $this->Toolbar->readCache('test');
+        $this->assertEquals($result, ['new', 'stuff'], 'Cache value is wrong %s');
+    }
 
-		$result = $this->Toolbar->readCache('test');
-		$this->assertEquals($result, ['new', 'stuff'], 'Cache value is wrong %s');
-	}
+    /**
+     * Test that reading/writing doesn't work with no cache config.
+     *
+     * @return void
+     */
+    public function testNoCacheConfigPresent(): void
+    {
+        $this->Toolbar = new ToolbarHelper($this->View, ['output' => 'MockBackendHelper']);
 
-/**
- * Test that reading/writing doesn't work with no cache config.
- *
- * @return void
- */
-	public function testNoCacheConfigPresent() {
-		$this->Toolbar = new ToolbarHelper($this->View, ['output' => 'MockBackendHelper']);
+        $result = $this->Toolbar->writeCache('test', ['stuff', 'to', 'cache']);
+        $this->assertFalse($result, 'Writing to cache succeeded with no cache config %s');
 
-		$result = $this->Toolbar->writeCache('test', ['stuff', 'to', 'cache']);
-		$this->assertFalse($result, 'Writing to cache succeeded with no cache config %s');
+        $result = $this->Toolbar->readCache('test');
+        $this->assertFalse($result, 'Reading cache succeeded with no cache config %s');
+    }
 
-		$result = $this->Toolbar->readCache('test');
-		$this->assertFalse($result, 'Reading cache succeeded with no cache config %s');
-	}
+    /**
+     * ensure that getQueryLogs works and writes to the cache so the history panel will
+     * work.
+     *
+     * @return void
+     */
+    public function testGetQueryLogs(): void
+    {
+        $model = new CakeTestModel(['table' => 'posts', 'alias' => 'Post']);
+        $model->find('all');
+        $model->find('first');
 
-/**
- * ensure that getQueryLogs works and writes to the cache so the history panel will
- * work.
- *
- * @return void
- */
-	public function testGetQueryLogs() {
-		$model = new CakeTestModel(['table' => 'posts', 'alias' => 'Post']);
-		$model->find('all');
-		$model->find('first');
+        $result = $this->Toolbar->getQueryLogs($model->useDbConfig, ['cache' => false]);
+        $this->assertTrue(is_array($result));
+        $this->assertTrue(count($result) >= 2, 'Should be more than 2 queries in the log %s');
+        $this->assertTrue(isset($result['queries'][0]['actions']));
 
-		$result = $this->Toolbar->getQueryLogs($model->useDbConfig, ['cache' => false]);
-		$this->assertTrue(is_array($result));
-		$this->assertTrue(count($result) >= 2, 'Should be more than 2 queries in the log %s');
-		$this->assertTrue(isset($result['queries'][0]['actions']));
+        $model->find('first');
+        Cache::delete('debug_kit_toolbar_test_case', 'default');
+        $result = $this->Toolbar->getQueryLogs($model->useDbConfig, ['cache' => true]);
 
-		$model->find('first');
-		Cache::delete('debug_kit_toolbar_test_case', 'default');
-		$result = $this->Toolbar->getQueryLogs($model->useDbConfig, ['cache' => true]);
-
-		$cached = $this->Toolbar->readCache('sql_log');
-		$this->assertTrue(isset($cached[$model->useDbConfig]));
-		$this->assertEquals($cached[$model->useDbConfig]['queries'][0], $result['queries'][0]);
-	}
-
+        $cached = $this->Toolbar->readCache('sql_log');
+        $this->assertTrue(isset($cached[$model->useDbConfig]));
+        $this->assertEquals($cached[$model->useDbConfig]['queries'][0], $result['queries'][0]);
+    }
 }

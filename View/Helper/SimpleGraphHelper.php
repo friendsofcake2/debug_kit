@@ -22,67 +22,68 @@ App::uses('HtmlHelper', 'View/Helper');
  *
  * @since         DebugKit 1.0
  */
-class SimpleGraphHelper extends AppHelper {
+class SimpleGraphHelper extends AppHelper
+{
+    /**
+     * Helpers
+     *
+     * @var array
+     */
+    public $helpers = ['Html'];
 
-/**
- * Helpers
- *
- * @var array
- */
-	public $helpers = ['Html'];
+    /**
+     * Default settings to be applied to each Simple Graph
+     *
+     * Allowed options:
+     *
+     * - max => (int) Maximum value in the graphs
+     * - width => (int)
+     * - valueType => string (value, percentage)
+     * - style => array
+     *
+     * @var array
+     */
+    protected $_defaultSettings = [
+        'max' => 100,
+        'width' => 350,
+        'valueType' => 'value',
+    ];
 
-/**
- * Default settings to be applied to each Simple Graph
- *
- * Allowed options:
- *
- * - max => (int) Maximum value in the graphs
- * - width => (int)
- * - valueType => string (value, percentage)
- * - style => array
- *
- * @var array
- */
-	protected $_defaultSettings = [
-		'max' => 100,
-		'width' => 350,
-		'valueType' => 'value',
-	];
+    /**
+     * Bar
+     *
+     * @param mixed $value Value to be graphed.
+     * @param mixed $offset How much indentation.
+     * @param \Graph|array $options Graph options.
+     * @return string HTML graph.
+     */
+    public function bar($value, $offset, $options = [])
+    {
+        $settings = array_merge($this->_defaultSettings, $options);
+        extract($settings);
 
-/**
- * Bar
- *
- * @param mixed $value Value to be graphed.
- * @param mixed $offset How much indentation.
- * @param array|\Graph $options Graph options.
- * @return string HTML graph.
- */
-	public function bar($value, $offset, $options = []) {
-		$settings = array_merge($this->_defaultSettings, $options);
-		extract($settings);
+        $graphValue = (float)$value / $max * $width;
+        $graphValue = max(round($graphValue), 1);
 
-		$graphValue = ((float)$value / $max) * $width;
-		$graphValue = max(round($graphValue), 1);
+        if ($valueType === 'percentage') {
+            $graphOffset = 0;
+        } else {
+            $graphOffset = (float)$offset / $max * $width;
+            $graphOffset = round($graphOffset);
+        }
 
-		if ($valueType === 'percentage') {
-			$graphOffset = 0;
-		} else {
-			$graphOffset = ((float)$offset / $max) * $width;
-			$graphOffset = round($graphOffset);
-		}
-		return $this->Html->div(
-			'debug-kit-graph-bar',
-				$this->Html->div(
-					'debug-kit-graph-bar-value',
-					' ',
-					[
-						'style' => "margin-left: {$graphOffset}px; width: {$graphValue}px",
-						'title' => __d('debug_kit', "Starting %sms into the request, taking %sms", $offset, $value),
-					]
-				),
-			['style' => "width: {$width}px;"],
-			false
-		);
-	}
-
+        return $this->Html->div(
+            'debug-kit-graph-bar',
+            $this->Html->div(
+                'debug-kit-graph-bar-value',
+                ' ',
+                [
+                        'style' => "margin-left: {$graphOffset}px; width: {$graphValue}px",
+                        'title' => __d('debug_kit', 'Starting %sms into the request, taking %sms', $offset, $value),
+                    ],
+            ),
+            ['style' => "width: {$width}px;"],
+            false,
+        );
+    }
 }

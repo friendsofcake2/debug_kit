@@ -23,47 +23,50 @@ App::uses('ToolbarAccess', 'DebugKit.Model');
  *
  * @since         DebugKit 1.3
  */
-class ToolbarAccessTest extends CakeTestCase {
+class ToolbarAccessTest extends CakeTestCase
+{
+    /**
+     * Included fixtures
+     *
+     * @var array
+     */
+    public $fixtures = ['core.post'];
 
-/**
- * Included fixtures
- *
- * @var array
- */
-	public $fixtures = ['core.post'];
+    /**
+     * setUp method
+     *
+     * @return void
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->Model = new ToolbarAccess();
+    }
 
-/**
- * setUp method
- *
- * @return void
- */
-	public function setUp(): void {
-		parent::setUp();
-		$this->Model = new ToolbarAccess();
-	}
+    /**
+     * tearDown
+     *
+     * @return void
+     */
+    public function tearDown(): void
+    {
+        parent::tearDown();
+        unset($this->Model);
+    }
 
-/**
- * tearDown
- *
- * @return void
- */
-	public function tearDown(): void {
-		parent::tearDown();
-		unset($this->Model);
-	}
+    /**
+     * test that explain query returns arrays of query information.
+     *
+     * @return void
+     */
+    public function testExplainQuery(): void
+    {
+        $Post = new CakeTestModel(['table' => 'posts', 'alias' => 'Post']);
+        $db = $Post->getDataSource();
+        $sql = 'SELECT * FROM ' . $db->fullTableName('posts') . ';';
+        $result = $this->Model->explainQuery($Post->useDbConfig, $sql);
 
-/**
- * test that explain query returns arrays of query information.
- *
- * @return void
- */
-	public function testExplainQuery() {
-		$Post = new CakeTestModel(['table' => 'posts', 'alias' => 'Post']);
-		$db = $Post->getDataSource();
-		$sql = 'SELECT * FROM ' . $db->fullTableName('posts') . ';';
-		$result = $this->Model->explainQuery($Post->useDbConfig, $sql);
-
-		$this->assertTrue(is_array($result));
-		$this->assertFalse(empty($result));
-	}
+        $this->assertTrue(is_array($result));
+        $this->assertFalse(empty($result));
+    }
 }

@@ -16,20 +16,21 @@ App::uses('DebugPanel', 'DebugKit.Lib');
 /**
  * Provides debug information on all timers used in a request.
  */
-class TimerPanel extends DebugPanel {
-
-/**
- * startup - add in necessary helpers
- *
- * @param Controller $controller Controller object.
- * @return void
- */
-	public function startup(Controller $controller) {
-		if (!in_array('Number', array_keys(HelperCollection::normalizeObjectArray($controller->helpers)))) {
-			$controller->helpers[] = 'Number';
-		}
-		if (!in_array('SimpleGraph', array_keys(HelperCollection::normalizeObjectArray($controller->helpers)))) {
-			$controller->helpers[] = 'DebugKit.SimpleGraph';
-		}
-	}
+class TimerPanel extends DebugPanel
+{
+    /**
+     * startup - add in necessary helpers
+     *
+     * @param Controller $controller Controller object.
+     * @return void
+     */
+    public function startup(Controller $controller)
+    {
+        if (!in_array('Number', array_keys(HelperCollection::normalizeObjectArray($controller->helpers)))) {
+            $controller->helpers[] = 'Number';
+        }
+        if (!in_array('SimpleGraph', array_keys(HelperCollection::normalizeObjectArray($controller->helpers)))) {
+            $controller->helpers[] = 'DebugKit.SimpleGraph';
+        }
+    }
 }

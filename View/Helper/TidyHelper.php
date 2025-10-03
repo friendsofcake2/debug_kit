@@ -21,151 +21,160 @@ App::uses('File', 'Utility');
  * @uses          AppHelper
  * @since         v 1.0 (22-Jun-2009)
  */
-class TidyHelper extends AppHelper {
+class TidyHelper extends AppHelper
+{
+    /**
+     * helpers property
+     *
+     * @var array
+     */
+    public $helpers = ['DebugKit.Toolbar'];
 
-/**
- * helpers property
- *
- * @var array
- */
-	public $helpers = ['DebugKit.Toolbar'];
+    /**
+     * results property
+     *
+     * @var mixed null
+     */
+    public $results = null;
 
-/**
- * results property
- *
- * @var mixed null
- */
-	public $results = null;
+    /**
+     * Return a nested array of errors for the passed html string
+     * Fudge the markup slightly so that the tag which is invalid is highlighted
+     *
+     * @param string $html The HTML to process.
+     * @param string &$out The variable to output the tidied HML into.
+     * @return array The nested array of errors.
+     */
+    public function process($html = '', &$out = '')
+    {
+        $errors = $this->tidyErrors($html, $out);
 
-/**
- * Return a nested array of errors for the passed html string
- * Fudge the markup slightly so that the tag which is invalid is highlighted
- *
- * @param string $html The HTML to process.
- * @param string &$out The variable to output the tidied HML into.
- * @return array The nested array of errors.
- */
-	public function process($html = '', &$out = '') {
-		$errors = $this->tidyErrors($html, $out);
+        if (!$errors) {
+            return [];
+        }
+        $result = ['Error' => [], 'Warning' => [], 'Misc' => []];
+        $errors = explode("\n", $errors);
+        $markup = explode("\n", $out);
+        foreach ($errors as $error) {
+            preg_match('@line (\d+) column (\d+) - (\w+): (.*)@', $error, $matches);
+            if ($matches) {
+                [, $line, , $type, $message] = $matches;
+                $line = $line - 1;
 
-		if (!$errors) {
-			return [];
-		}
-		$result = ['Error' => [], 'Warning' => [], 'Misc' => []];
-		$errors = explode("\n", $errors);
-		$markup = explode("\n", $out);
-		foreach ($errors as $error) {
-			preg_match('@line (\d+) column (\d+) - (\w+): (.*)@', $error, $matches);
-			if ($matches) {
-				[$original, $line, $column, $type, $message] = $matches;
-				$line = $line - 1;
+                $string = '</strong>';
+                if (isset($markup[$line - 1])) {
+                    $string .= h($markup[$line - 1]);
+                }
+                $string .= '<strong>' . h($markup[$line] ?? '') . '</strong>';
+                if (isset($markup[$line + 1])) {
+                    $string .= h($markup[$line + 1]);
+                }
+                $string .= '</strong>';
 
-				$string = '</strong>';
-				if (isset($markup[$line - 1])) {
-					$string .= h($markup[$line - 1]);
-				}
-				$string .= '<strong>' . h(@$markup[$line]) . '</strong>';
-				if (isset($markup[$line + 1])) {
-					$string .= h($markup[$line + 1]);
-				}
-				$string .= '</strong>';
+                $result[$type][$string][] = h($message);
+            } elseif ($error) {
+                $message = $error;
+                $result['Misc'][h($message)][] = h($message);
+            }
+        }
+        $this->results = $result;
 
-				$result[$type][$string][] = h($message);
-			} elseif ($error) {
-				$message = $error;
-				$result['Misc'][h($message)][] = h($message);
-			}
-		}
-		$this->results = $result;
-		return $result;
-	}
+        return $result;
+    }
 
-/**
- * report method
- *
- * Call process if a string is passed, or no prior results exist - and return the results using
- * the toolbar helper to generate a nested navigatable array
- *
- * @param mixed $html null
- * @return string
- */
-	public function report($html = null) {
-		if ($html) {
-			$this->process($html);
-		} elseif ($this->results === null) {
-			$this->process($this->_View->output);
-		}
-		if (!$this->results) {
-			return '<p>' . __d('debug_kit', 'No markup errors found') . '</p>';
-		}
-		foreach ($this->results as &$results) {
-			foreach ($results as $type => &$messages) {
-				foreach ($messages as &$message) {
-					$message = html_entity_decode($message, ENT_COMPAT, Configure::read('App.encoding'));
-				}
-			}
-		}
-		return $this->Toolbar->makeNeatArray(array_filter($this->results), 0, 0, false);
-	}
+    /**
+     * report method
+     *
+     * Call process if a string is passed, or no prior results exist - and return the results using
+     * the toolbar helper to generate a nested navigatable array
+     *
+     * @param mixed $html null
+     * @return string
+     */
+    public function report($html = null)
+    {
+        if ($html) {
+            $this->process($html);
+        } elseif ($this->results === null) {
+            $this->process($this->_View->output);
+        }
+        if (!$this->results) {
+            return '<p>' . __d('debug_kit', 'No markup errors found') . '</p>';
+        }
+        foreach ($this->results as &$results) {
+            foreach ($results as &$messages) {
+                foreach ($messages as &$message) {
+                    $message = html_entity_decode($message, ENT_COMPAT, Configure::read('App.encoding'));
+                }
+            }
+        }
 
-/**
- * Run the html string through tidy, and return the (raw) errors. pass back a reference to the
- * normalized string so that the error messages can be linked to the line that caused them.
- *
- * @param string $in The input.
- * @param string &$out The output variable.
- * @return string
- */
-	public function tidyErrors($in = '', &$out = '') {
-		$out = preg_replace('@>\s*<@s', ">\n<", $in);
+        return $this->Toolbar->makeNeatArray(array_filter($this->results), 0, 0, false);
+    }
 
-		// direct access? windows etc
-		if (function_exists('tidy_parse_string')) {
-			$tidy = tidy_parse_string($out, [], 'UTF8');
-			$tidy->cleanRepair();
-			$errors = $tidy->errorBuffer . "\n";
-			return $errors;
-		}
+    /**
+     * Run the html string through tidy, and return the (raw) errors. pass back a reference to the
+     * normalized string so that the error messages can be linked to the line that caused them.
+     *
+     * @param string $in The input.
+     * @param string &$out The output variable.
+     * @return string
+     */
+    public function tidyErrors($in = '', &$out = '')
+    {
+        $out = preg_replace('@>\s*<@s', ">\n<", $in);
 
-		// cli
-		$File = new File(rtrim(TMP, DS) . DS . random_int(0, mt_getrandmax()) . '.html', true);
-		$File->write($out);
-		$path = $File->pwd();
-		$errors = $path . '.err';
-		$this->_exec("tidy -eq -utf8 -f $errors $path");
-		$File->delete();
+        // direct access? windows etc
+        if (function_exists('tidy_parse_string')) {
+            $tidy = tidy_parse_string($out, [], 'UTF8');
+            $tidy->cleanRepair();
+            $errors = $tidy->errorBuffer . "\n";
 
-		if (!file_exists($errors)) {
-			return '';
-		}
-		$Error = new File($errors);
-		$errors = $Error->read();
-		$Error->delete();
-		return $errors;
-	}
+            return $errors;
+        }
 
-/**
- * Execute
- *
- * @param mixed $cmd The command
- * @param mixed &$out The variable to put the output into.
- * @return bool True if successful
- */
-	protected function _exec($cmd, &$out = null) {
-		if (DS === '/') {
-			$_out = exec($cmd . ' 2>&1', $out, $return);
-		} else {
-			$_out = exec($cmd, $out, $return);
-		}
+        // cli
+        $File = new File(rtrim(TMP, DS) . DS . random_int(0, mt_getrandmax()) . '.html', true);
+        $File->write($out);
+        $path = $File->pwd();
+        $errors = $path . '.err';
+        $this->_exec("tidy -eq -utf8 -f $errors $path");
+        $File->delete();
 
-		if (Configure::read('debug')) {
-			$source = Debugger::trace(['depth' => 1, 'start' => 2]) . "\n";
-			//CakeLog::write('system_calls_' . date('Y-m-d'), "\n" . $source . Debugger::exportVar(compact('cmd','out','return')));
-			//CakeLog::write('system_calls', "\n" . $source . Debugger::exportVar(compact('cmd','out','return')));
-		}
-		if ($return) {
-			return false;
-		}
-		return $_out ?: true;
-	}
+        if (!file_exists($errors)) {
+            return '';
+        }
+        $Error = new File($errors);
+        $errors = $Error->read();
+        $Error->delete();
+
+        return $errors;
+    }
+
+    /**
+     * Execute
+     *
+     * @param mixed $cmd The command
+     * @param mixed &$out The variable to put the output into.
+     * @return bool True if successful
+     */
+    protected function _exec($cmd, &$out = null)
+    {
+        if (DS === '/') {
+            $_out = exec($cmd . ' 2>&1', $out, $return);
+        } else {
+            $_out = exec($cmd, $out, $return);
+        }
+
+        if (Configure::read('debug')) {
+            Debugger::trace(['depth' => 1, 'start' => 2]) . "\n";
+            //CakeLog::write('system_calls_' . date('Y-m-d'), "\n" . $source . Debugger::exportVar(compact('cmd','out','return')));
+            //CakeLog::write('system_calls', "\n" . $source . Debugger::exportVar(compact('cmd','out','return')));
+        }
+        if ($return) {
+            return false;
+        }
+
+        return $_out ?: true;
+    }
 }

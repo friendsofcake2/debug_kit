@@ -16,142 +16,152 @@ App::uses('DebugPanel', 'DebugKit.Lib');
 /**
  * Provides a list of included files for the current request
  */
-class IncludePanel extends DebugPanel {
+class IncludePanel extends DebugPanel
+{
+    /**
+     * The list of plugins within the application
+     *
+     * @var <type>
+     */
+    protected $_pluginPaths = [];
 
-/**
- * The list of plugins within the application
- *
- * @var <type>
- */
-	protected $_pluginPaths = [];
+    /**
+     * File Types
+     *
+     * @var array
+     */
+    protected $_fileTypes = [
+        'Cache', 'Config', 'Configure', 'Console', 'Component', 'Controller',
+        'Behavior', 'Datasource', 'Model', 'Plugin', 'Test', 'View', 'Utility',
+        'Network', 'Routing', 'I18n', 'Log', 'Error',
+    ];
 
-/**
- * File Types
- *
- * @var array
- */
-	protected $_fileTypes = [
-		'Cache', 'Config', 'Configure', 'Console', 'Component', 'Controller',
-		'Behavior', 'Datasource', 'Model', 'Plugin', 'Test', 'View', 'Utility',
-		'Network', 'Routing', 'I18n', 'Log', 'Error'
-	];
+    /**
+     * Get a list of plugins on construct for later use
+     */
+    public function __construct()
+    {
+        foreach (CakePlugin::loaded() as $plugin) {
+            $this->_pluginPaths[$plugin] = CakePlugin::path($plugin);
+        }
 
-/**
- * Get a list of plugins on construct for later use
- */
-	public function __construct() {
-		foreach (CakePlugin::loaded() as $plugin) {
-			$this->_pluginPaths[$plugin] = CakePlugin::path($plugin);
-		}
+        parent::__construct();
+    }
 
-		parent::__construct();
-	}
+    /**
+     * Get a list of files that were included and split them out into the various parts of the app
+     *
+     * @param Controller $controller The controller.
+     * @return array
+     */
+    public function beforeRender(Controller $controller)
+    {
+        $return = ['core' => [], 'app' => [], 'plugins' => []];
 
-/**
- * Get a list of files that were included and split them out into the various parts of the app
- *
- * @param Controller $controller The controller.
- * @return array
- */
-	public function beforeRender(Controller $controller) {
-		$return = ['core' => [], 'app' => [], 'plugins' => []];
+        foreach (get_included_files() as $file) {
+            $pluginName = $this->_isPluginFile($file);
 
-		foreach (get_included_files() as $file) {
-			$pluginName = $this->_isPluginFile($file);
+            if ($pluginName) {
+                $return['plugins'][$pluginName][$this->_getFileType($file)][] = $this->_niceFileName($file, $pluginName);
+            } elseif ($this->_isAppFile($file)) {
+                $return['app'][$this->_getFileType($file)][] = $this->_niceFileName($file, 'app');
+            } elseif ($this->_isCoreFile($file)) {
+                $return['core'][$this->_getFileType($file)][] = $this->_niceFileName($file, 'core');
+            }
+        }
 
-			if ($pluginName) {
-				$return['plugins'][$pluginName][$this->_getFileType($file)][] = $this->_niceFileName($file, $pluginName);
-			} elseif ($this->_isAppFile($file)) {
-				$return['app'][$this->_getFileType($file)][] = $this->_niceFileName($file, 'app');
-			} elseif ($this->_isCoreFile($file)) {
-				$return['core'][$this->_getFileType($file)][] = $this->_niceFileName($file, 'core');
-			}
-		}
+        $return['paths'] = $this->_includePaths();
 
-		$return['paths'] = $this->_includePaths();
+        ksort($return['core']);
+        ksort($return['plugins']);
+        ksort($return['app']);
 
-		ksort($return['core']);
-		ksort($return['plugins']);
-		ksort($return['app']);
-		return $return;
-	}
+        return $return;
+    }
 
-/**
- * Get the possible include paths
- *
- * @return array
- */
-	protected function _includePaths() {
-		$paths = array_flip(array_merge(explode(PATH_SEPARATOR, get_include_path()), [CAKE]));
+    /**
+     * Get the possible include paths
+     *
+     * @return array
+     */
+    protected function _includePaths()
+    {
+        $paths = array_flip(array_merge(explode(PATH_SEPARATOR, get_include_path()), [CAKE]));
 
-		unset($paths['.']);
-		return array_flip($paths);
-	}
+        unset($paths['.']);
 
-/**
- * Check if a path is part of cake core
- *
- * @param string $file The file.
- * @return bool True if it is a core path, else false.
- */
-	protected function _isCoreFile($file) {
-		return strstr($file, (string) CAKE);
-	}
+        return array_flip($paths);
+    }
 
-/**
- * Check if a path is from APP but not a plugin
- *
- * @param string $file The file.
- * @return bool True if it is an app path, else false.
- */
-	protected function _isAppFile($file) {
-		return strstr($file, (string) APP);
-	}
+    /**
+     * Check if a path is part of cake core
+     *
+     * @param string $file The file.
+     * @return bool True if it is a core path, else false.
+     */
+    protected function _isCoreFile($file)
+    {
+        return strstr($file, (string)CAKE);
+    }
 
-/**
- * Check if a path is from a plugin
- *
- * @param string $file The file.
- * @return bool True if it is a plugin path, else false.
- */
-	protected function _isPluginFile($file) {
-		foreach ($this->_pluginPaths as $plugin => $path) {
-			if (strstr($file, (string) $path)) {
-				return $plugin;
-			}
-		}
+    /**
+     * Check if a path is from APP but not a plugin
+     *
+     * @param string $file The file.
+     * @return bool True if it is an app path, else false.
+     */
+    protected function _isAppFile($file)
+    {
+        return strstr($file, (string)APP);
+    }
 
-		return false;
-	}
+    /**
+     * Check if a path is from a plugin
+     *
+     * @param string $file The file.
+     * @return bool True if it is a plugin path, else false.
+     */
+    protected function _isPluginFile($file)
+    {
+        foreach ($this->_pluginPaths as $plugin => $path) {
+            if (strstr($file, (string)$path)) {
+                return $plugin;
+            }
+        }
 
-/**
- * Replace the path with APP, CORE or the plugin name
- *
- * @param string $file The file path.
- * @param string $type 'app' for app files, 'core' for core files and PluginName for the name of a plugin.
- * @return string The replaced string.
- */
-	protected function _niceFileName($file, $type) {
-		return match ($type) {
+        return false;
+    }
+
+    /**
+     * Replace the path with APP, CORE or the plugin name
+     *
+     * @param string $file The file path.
+     * @param string $type 'app' for app files, 'core' for core files and PluginName for the name of a plugin.
+     * @return string The replaced string.
+     */
+    protected function _niceFileName($file, $type)
+    {
+        return match ($type) {
             'app' => str_replace(APP, 'APP/', $file),
             'core' => str_replace(CAKE, 'CORE/', $file),
             default => str_replace($this->_pluginPaths[$type], $type . '/', $file),
         };
-	}
+    }
 
-/**
- * Get the type of file (model, controller etc)
- *
- * @param string $file The file.
- * @return string The file type of the given file.
- */
-	protected function _getFileType($file) {
-		foreach ($this->_fileTypes as $type) {
-			if (stripos($file, '/' . $type . '/') !== false) {
-				return $type;
-			}
-		}
+    /**
+     * Get the type of file (model, controller etc)
+     *
+     * @param string $file The file.
+     * @return string The file type of the given file.
+     */
+    protected function _getFileType($file)
+    {
+        foreach ($this->_fileTypes as $type) {
+            if (stripos($file, '/' . $type . '/') !== false) {
+                return $type;
+            }
+        }
 
-		return 'Other';
-	}
+        return 'Other';
+    }
 }

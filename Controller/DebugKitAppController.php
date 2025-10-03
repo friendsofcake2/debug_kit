@@ -20,6 +20,6 @@ App::uses('AppController', 'Controller');
  *
  * @since         DebugKit 0.1
  */
-class DebugKitAppController extends AppController {
-
+class DebugKitAppController extends AppController
+{
 }

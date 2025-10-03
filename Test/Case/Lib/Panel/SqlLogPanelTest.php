@@ -22,38 +22,40 @@ App::uses('Controller', 'Controller');
  *
  * @since         DebugKit 2.1
  */
-class SqlLogPanelTest extends CakeTestCase {
+class SqlLogPanelTest extends CakeTestCase
+{
+    /**
+     * fixtures.
+     *
+     * @var array
+     */
+    public $fixtures = ['core.article'];
 
-/**
- * fixtures.
- *
- * @var array
- */
-	public $fixtures = ['core.article'];
+    /**
+     * Setup
+     *
+     * @return void
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->panel = new SqlLogPanel();
+    }
 
-/**
- * Setup
- *
- * @return void
- */
-	public function setUp(): void {
-		parent::setUp();
-		$this->panel = new SqlLogPanel();
-	}
+    /**
+     * test the parsing of source list.
+     *
+     * @return void
+     */
+    public function testBeforeRender(): void
+    {
+        $Article = ClassRegistry::init('Article');
+        $Article->find('first', ['conditions' => ['Article.id' => 1]]);
 
-/**
- * test the parsing of source list.
- *
- * @return void
- */
-	public function testBeforeRender() {
-		$Article = ClassRegistry::init('Article');
-		$Article->find('first', ['conditions' => ['Article.id' => 1]]);
+        $controller = new Controller();
+        $result = $this->panel->beforeRender($controller);
 
-		$controller = new Controller();
-		$result = $this->panel->beforeRender($controller);
-
-		$this->assertTrue(isset($result['connections'][$Article->useDbConfig]));
-		$this->assertTrue(isset($result['threshold']));
-	}
+        $this->assertTrue(isset($result['connections'][$Article->useDbConfig]));
+        $this->assertTrue(isset($result['threshold']));
+    }
 }

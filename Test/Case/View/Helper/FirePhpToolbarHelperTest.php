@@ -32,121 +32,129 @@ require_once $path . 'Test' . DS . 'Case' . DS . 'TestFireCake.php';
  *
  * @since         DebugKit 0.1
  */
-class FirePhpToolbarHelperTest extends CakeTestCase {
+class FirePhpToolbarHelperTest extends CakeTestCase
+{
+    /**
+     * setUp
+     *
+     * @return void
+     **/
+    public function setUp(): void
+    {
+        parent::setUp();
 
-/**
- * setUp
- *
- * @return void
- **/
-	public function setUp(): void {
-		parent::setUp();
+        Router::connect('/:controller/:action');
+        Router::connect('/', ['controller' => 'pages', 'action' => 'display', 'home']);
+        Router::parse('/');
 
-		Router::connect('/:controller/:action');
-		Router::connect('/', ['controller' => 'pages', 'action' => 'display', 'home']);
-		Router::parse('/');
+        $this->Controller = new Controller($this->getMock('CakeRequest'), new CakeResponse());
+        $this->View = new View($this->Controller);
+        $this->Toolbar = new ToolbarHelper($this->View, ['output' => 'DebugKit.FirePhpToolbar']);
+        $this->Toolbar->FirePhpToolbar = new FirePhpToolbarHelper($this->View);
 
-		$this->Controller = new Controller($this->getMock('CakeRequest'), new CakeResponse());
-		$this->View = new View($this->Controller);
-		$this->Toolbar = new ToolbarHelper($this->View, ['output' => 'DebugKit.FirePhpToolbar']);
-		$this->Toolbar->FirePhpToolbar = new FirePhpToolbarHelper($this->View);
+        $this->firecake = FireCake::getInstance('TestFireCake');
+        TestFireCake::reset();
+    }
 
-		$this->firecake = FireCake::getInstance('TestFireCake');
-		TestFireCake::reset();
-	}
+    /**
+     * Start test - switch view paths
+     *
+     * @return void
+     **/
+    public static function setupBeforeClass(): void
+    {
+        App::build([
+            'View' => [
+                CAKE_CORE_INCLUDE_PATH . DS . 'Cake' . DS . 'Test' . DS . 'test_app' . DS . 'View' . DS,
+                APP . 'Plugin' . DS . 'DebugKit' . DS . 'View' . DS,
+                CAKE_CORE_INCLUDE_PATH . DS . 'Cake' . DS . 'View' . DS,
+            ]], true);
+    }
 
-/**
- * Start test - switch view paths
- *
- * @return void
- **/
-	public static function setupBeforeClass(): void {
-		App::build([
-			'View' => [
-				CAKE_CORE_INCLUDE_PATH . DS . 'Cake' . DS . 'Test' . DS . 'test_app' . DS . 'View' . DS,
-				APP . 'Plugin' . DS . 'DebugKit' . DS . 'View' . DS,
-				CAKE_CORE_INCLUDE_PATH . DS . 'Cake' . DS . 'View' . DS
-		]], true);
-	}
+    /**
+     * End Test
+     *
+     * @return void
+     */
+    public static function tearDownAfterClass(): void
+    {
+        App::build();
+    }
 
-/**
- * End Test
- *
- * @return void
- */
-	public static function tearDownAfterClass(): void {
-		App::build();
-	}
+    /**
+     * TearDown
+     *
+     * @return void
+     */
+    public function tearDown(): void
+    {
+        parent::tearDown();
+        unset($this->Toolbar, $this->Controller);
+        TestFireCake::reset();
+    }
 
-/**
- * TearDown
- *
- * @return void
- */
-	public function tearDown(): void {
-		parent::tearDown();
-		unset($this->Toolbar, $this->Controller);
-		TestFireCake::reset();
-	}
+    /**
+     * Test neat array (dump)creation
+     *
+     * @return void
+     */
+    public function testMakeNeatArray(): void
+    {
+        $this->Toolbar->makeNeatArray([1, 2, 3]);
+        $result = $this->firecake->sentHeaders;
+        $this->assertTrue(isset($result['X-Wf-1-1-1-1']));
+        $this->assertMatchesRegularExpression('/\[1,2,3\]/', $result['X-Wf-1-1-1-1']);
+    }
 
-/**
- * Test neat array (dump)creation
- *
- * @return void
- */
-	public function testMakeNeatArray() {
-		$this->Toolbar->makeNeatArray([1, 2, 3]);
-		$result = $this->firecake->sentHeaders;
-		$this->assertTrue(isset($result['X-Wf-1-1-1-1']));
-		$this->assertMatchesRegularExpression('/\[1,2,3\]/', $result['X-Wf-1-1-1-1']);
-	}
+    /**
+     * Test afterlayout element rendering
+     *
+     * @return void
+     */
+    public function testAfterLayout(): void
+    {
+        $this->Controller->viewPath = 'Posts';
+        $request = new CakeRequest('/posts/index');
+        $request->addParams(Router::parse($request->url));
+        $request->addPaths([
+            'webroot' => '/',
+            'base' => '/',
+            'here' => '/posts/index',
+        ]);
+        $this->Controller->setRequest($request);
+        $this->Controller->layout = 'default';
+        $this->Controller->uses = null;
+        $this->Controller->components = ['DebugKit.Toolbar'];
+        $this->Controller->constructClasses();
+        $this->Controller->Components->trigger('startup', [$this->Controller]);
+        $this->Controller->Components->trigger('beforeRender', [$this->Controller]);
+        $result = $this->Controller->render();
+        $this->assertDoesNotMatchRegularExpression('/debug-toolbar/', (string)$result);
+        $result = $this->firecake->sentHeaders;
+        $this->assertTrue(is_array($result));
+    }
 
-/**
- * Test afterlayout element rendering
- *
- * @return void
- */
-	public function testAfterLayout() {
-		$this->Controller->viewPath = 'Posts';
-		$request = new CakeRequest('/posts/index');
-		$request->addParams(Router::parse($request->url));
-		$request->addPaths([
-			'webroot' => '/',
-			'base' => '/',
-			'here' => '/posts/index',
-		]);
-		$this->Controller->setRequest($request);
-		$this->Controller->layout = 'default';
-		$this->Controller->uses = null;
-		$this->Controller->components = ['DebugKit.Toolbar'];
-		$this->Controller->constructClasses();
-		$this->Controller->Components->trigger('startup', [$this->Controller]);
-		$this->Controller->Components->trigger('beforeRender', [$this->Controller]);
-		$result = $this->Controller->render();
-		$this->assertDoesNotMatchRegularExpression('/debug-toolbar/', (string)$result);
-		$result = $this->firecake->sentHeaders;
-		$this->assertTrue(is_array($result));
-	}
+    /**
+     * test starting a panel
+     *
+     * @return void
+     **/
+    public function testPanelStart(): void
+    {
+        $this->Toolbar->panelStart('My Panel', 'my_panel');
+        $result = $this->firecake->sentHeaders;
+        $this->assertMatchesRegularExpression('/GROUP_START.+My Panel/', $result['X-Wf-1-1-1-1']);
+    }
 
-/**
- * test starting a panel
- *
- * @return void
- **/
-	public function testPanelStart() {
-		$this->Toolbar->panelStart('My Panel', 'my_panel');
-		$result = $this->firecake->sentHeaders;
-		$this->assertMatchesRegularExpression('/GROUP_START.+My Panel/', $result['X-Wf-1-1-1-1']);
-	}
-
-/**
- * test ending a panel
- *
- * @return void
- **/
-	public function testPanelEnd() {
-		$this->Toolbar->panelEnd();
-		$result = $this->firecake->sentHeaders;
-		$this->assertMatchesRegularExpression('/GROUP_END/', $result['X-Wf-1-1-1-1']);
-	}
+    /**
+     * test ending a panel
+     *
+     * @return void
+     **/
+    public function testPanelEnd(): void
+    {
+        $this->Toolbar->panelEnd();
+        $result = $this->firecake->sentHeaders;
+        $this->assertMatchesRegularExpression('/GROUP_END/', $result['X-Wf-1-1-1-1']);
+    }
 }

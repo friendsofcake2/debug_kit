@@ -25,53 +25,57 @@ require_once CakePlugin::path('DebugKit') . 'Test' . DS . 'Case' . DS . 'TestFir
  *
  * @since         debug_kit 0.1
  */
-class DebugKitDebuggerTest extends CakeTestCase {
+class DebugKitDebuggerTest extends CakeTestCase
+{
+    /**
+     * setUp method
+     *
+     * @return void
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Configure::write('log', false);
+        $this->firecake = FireCake::getInstance('TestFireCake');
+        TestFireCake::reset();
+    }
 
-/**
- * setUp method
- *
- * @return void
- */
-	public function setUp(): void {
-		parent::setUp();
-		Configure::write('log', false);
-		$this->firecake = FireCake::getInstance('TestFireCake');
-		TestFireCake::reset();
-	}
+    /**
+     * tearDown method
+     *
+     * @return void
+     */
+    public function tearDown(): void
+    {
+        parent::tearDown();
+        Configure::write('log', true);
+        DebugTimer::clear();
+        TestFireCake::reset();
+    }
 
-/**
- * tearDown method
- *
- * @return void
- */
-	public function tearDown(): void {
-		parent::tearDown();
-		Configure::write('log', true);
-		DebugTimer::clear();
-		TestFireCake::reset();
-	}
+    /**
+     * test output switch to firePHP
+     *
+     * @return void
+     */
+    public function testOutput(): void
+    {
+        Debugger::getInstance('DebugKitDebugger');
+        Debugger::addFormat('fb', ['callback' => 'DebugKitDebugger::fireError']);
+        Debugger::outputAs('fb');
 
-/**
- * test output switch to firePHP
- *
- * @return void
- */
-	public function testOutput() {
-		Debugger::getInstance('DebugKitDebugger');
-		Debugger::addFormat('fb', ['callback' => 'DebugKitDebugger::fireError']);
-		Debugger::outputAs('fb');
+        set_error_handler('ErrorHandler::handleError');
+        // phpcs:ignore SlevomatCodingStandard.Variables.UnusedVariable.UnusedVariable
+        $foo .= '';
+        restore_error_handler();
 
-		set_error_handler('ErrorHandler::handleError');
-		$foo .= '';
-		restore_error_handler();
+        $result = $this->firecake->sentHeaders;
 
-		$result = $this->firecake->sentHeaders;
+        $this->assertMatchesRegularExpression('/GROUP_START/', $result['X-Wf-1-1-1-1']);
+        $this->assertMatchesRegularExpression('/ERROR/', $result['X-Wf-1-1-1-2']);
+        $this->assertMatchesRegularExpression('/GROUP_END/', $result['X-Wf-1-1-1-4']);
 
-		$this->assertMatchesRegularExpression('/GROUP_START/', $result['X-Wf-1-1-1-1']);
-		$this->assertMatchesRegularExpression('/ERROR/', $result['X-Wf-1-1-1-2']);
-		$this->assertMatchesRegularExpression('/GROUP_END/', $result['X-Wf-1-1-1-4']);
-
-		Debugger::getInstance('Debugger');
-		Debugger::outputAs('html');
-	}
+        Debugger::getInstance('Debugger');
+        Debugger::outputAs('html');
+    }
 }

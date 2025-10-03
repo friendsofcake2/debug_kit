@@ -19,6 +19,6 @@ App::uses('AppModel', 'Model');
  *
  * @since         DebugKit 0.1
  */
-class DebugKitAppModel extends AppModel {
-
+class DebugKitAppModel extends AppModel
+{
 }
