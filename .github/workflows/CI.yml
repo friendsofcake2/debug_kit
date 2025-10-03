@@ -210,7 +210,7 @@ jobs:
 
       - name: Check PHP code style
         id: phpcs
-        run: ./vendors/bin/phpcs --report-full --report-checkstyle=./phpcs-report.xml
+        run: ./vendor/bin/phpcs --report-full --report-checkstyle=./phpcs-report.xml
 
       - name: Show PHPCS results in PR
         if: ${{ always() && steps.phpcs.outcome == 'failure' }}
