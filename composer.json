@@ -1,5 +1,5 @@
 {
-    "name": "friendsofcake2/debug_kit",
+    "name": "pieceofcake2/debug_kit",
     "description": "CakePHP 2 Debug Kit",
     "type": "cakephp-plugin",
     "keywords": ["cakephp", "cakephp2", "debug", "kit"],
@@ -7,13 +7,14 @@
     "require": {
         "php": "^8.0",
         "composer/installers": "*",
-        "friendsofcake2/cakephp": "^2.10"
+        "pieceofcake2/cakephp": "^2.10"
     },
     "require-dev": {
         "cakephp/cakephp-codesniffer": "^5.0",
-        "friendsofcake2/phpstan-cakephp2": "^0.2.1",
         "phpstan/phpstan": "^2.1",
-        "phpunit/phpunit": "^9.6"
+        "phpunit/phpunit": "^9.6",
+        "pieceofcake2/app": "^2.1",
+        "pieceofcake2/phpstan-cakephp2": "^0.2.1"
     },
     "replace": {
         "cakephp/debug_kit": "^2.0"

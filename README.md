@@ -1,11 +1,11 @@
 # CakePHP 2 DebugKit
 
-[![GitHub License](https://img.shields.io/github/license/friendsofcake2/debug_kit?label=License)](LICENSE)
-[![Packagist Version](https://img.shields.io/packagist/v/friendsofcake2/debug_kit?label=Packagist)](https://packagist.org/packages/friendsofcake2/debug_kit)
-[![PHP](https://img.shields.io/packagist/dependency-v/friendsofcake2/debug_kit/php?logo=php&logoColor=%23FFFFFF&label=PHP&labelColor=%23777BB4&color=%23FFFFFF)](https://packagist.org/packages/friendsofcake2/debug_kit)
-[![CakePHP](https://img.shields.io/packagist/dependency-v/friendsofcake2/debug_kit/friendsofcake2/cakephp?logo=cakephp&logoColor=%23FFFFFF&label=CakePHP&labelColor=%23D33C43&color=%23FFFFFF)](https://packagist.org/packages/friendsofcake2/debug_kit)
-[![CI](https://img.shields.io/github/actions/workflow/status/friendsofcake2/debug_kit/CI.yml?label=CI)](https://github.com/friendsofcake2/debug_kit/actions/workflows/CI.yml)
-[![Codecov](https://img.shields.io/codecov/c/gh/friendsofcake2/debug_kit?label=Coverage)](https://codecov.io/gh/friendsofcake2/debug_kit)
+[![GitHub License](https://img.shields.io/github/license/pieceofcake2/debug_kit?label=License)](LICENSE)
+[![Packagist Version](https://img.shields.io/packagist/v/pieceofcake2/debug_kit?label=Packagist)](https://packagist.org/packages/pieceofcake2/debug_kit)
+[![PHP](https://img.shields.io/packagist/dependency-v/pieceofcake2/debug_kit/php?logo=php&logoColor=%23FFFFFF&label=PHP&labelColor=%23777BB4&color=%23FFFFFF)](https://packagist.org/packages/pieceofcake2/debug_kit)
+[![CakePHP](https://img.shields.io/packagist/dependency-v/pieceofcake2/debug_kit/pieceofcake2/cakephp?logo=cakephp&logoColor=%23FFFFFF&label=CakePHP&labelColor=%23D33C43&color=%23FFFFFF)](https://packagist.org/packages/pieceofcake2/debug_kit)
+[![CI](https://img.shields.io/github/actions/workflow/status/pieceofcake2/debug_kit/CI.yml?label=CI)](https://github.com/pieceofcake2/debug_kit/actions/workflows/CI.yml)
+[![Codecov](https://img.shields.io/codecov/c/gh/pieceofcake2/debug_kit?label=Coverage)](https://codecov.io/gh/pieceofcake2/debug_kit)
 
 **This is forked for CakePHP2.**
 
@@ -24,7 +24,7 @@ Install the plugin with [Composer](https://getcomposer.org/) from the directory,
 your project's `composer.json` is located:
 
 ```
-composer require --dev friendsofcake2/debug_kit
+composer require --dev pieceofcake2/debug_kit
 ```
 
 > Consider using "--dev", if you only want to include DebugKit for your development environment.
@@ -60,7 +60,7 @@ class AppController extends Controller {
 
 ## Reporting Issues
 
-If you have a problem with DebugKit please open an issue on [GitHub](https://github.com/friendsofcake2/debug_kit/issues).
+If you have a problem with DebugKit please open an issue on [GitHub](https://github.com/pieceofcake2/debug_kit/issues).
 
 ## Contributing
 
