@@ -119,10 +119,12 @@ jobs:
         run: composer install --no-ansi --no-interaction --no-progress
 
       - name: Make temporary directories writable
-        run: chmod -R 777 ./vendor/pieceofcake2/cakephp/app/tmp
+        run: |
+          chmod -R 777 ./vendor/pieceofcake2/app/tmp
+          chmod -R 777 ./vendor/pieceofcake2/app/logs
 
       - name: Copy database.php
-        run: cp ./vendor/pieceofcake2/cakephp/lib/Cake/Test/Config/database.php ./vendor/pieceofcake2/cakephp/app/Config/
+        run: cp ./vendor/pieceofcake2/cakephp/lib/Cake/Test/Config/database.php ./vendor/pieceofcake2/app/config/
 
       - name: Setup problem matchers for PHPUnit
         run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"

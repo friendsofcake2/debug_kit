@@ -3,7 +3,11 @@
  * Bootstrap for PHPUnit
  */
 
-require_once __DIR__ . '/../vendor/pieceofcake2/cakephp/lib/Cake/Test/bootstrap.php';
+define('DS', DIRECTORY_SEPARATOR);
+define('VENDORS', dirname(__DIR__) . DS . 'vendor' . DS);
+define('ROOT', VENDORS . 'pieceofcake2' . DS . 'app');
+
+require_once 'Cake' . DS . 'Test' . DS . 'bootstrap.php';
 
 App::uses('CakePlugin', 'Core');
 CakePlugin::load('DebugKit', [
