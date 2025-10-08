@@ -1,6 +1,6 @@
 <?php
 /**
- * Session Panel Element
+ * Request Action Render template
  *
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
@@ -10,9 +10,7 @@
  *
  * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
  * @link          http://cakephp.org CakePHP(tm) Project
- * @since         DebugKit 1.1
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 ?>
-<h2><?php echo __d('debug_kit', 'Session'); ?></h2>
-<?php echo $this->Toolbar->makeNeatArray($content);
+<?php echo $test; ?>

@@ -1,6 +1,6 @@
 <?php
 /**
- * Session Panel Element
+ * Test Panel of test_app
  *
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
@@ -10,9 +10,27 @@
  *
  * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
  * @link          http://cakephp.org CakePHP(tm) Project
- * @since         DebugKit 1.1
+ * @since         DebugKit 0.1
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
-?>
-<h2><?php echo __d('debug_kit', 'Session'); ?></h2>
-<?php echo $this->Toolbar->makeNeatArray($content);
+
+App::uses('DebugPanel', 'DebugKit.Lib');
+
+/**
+ * Class TestPanel
+ *
+ * @since         DebugKit 0.1
+ */
+class TestPanel extends DebugPanel
+{
+    /**
+     * Startup
+     *
+     * @param Controller $controller The controller.
+     * @return void
+     */
+    public function startup(Controller $controller)
+    {
+        $controller->testPanel = true;
+    }
+}
