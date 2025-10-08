@@ -15,8 +15,8 @@ DebugKit provides a debugging toolbar and enhanced debugging tools for CakePHP a
 
 The master branch has the following requirements:
 
-* CakePHP 2.10 or higher.
-* PHP 8.0 or higher.
+* CakePHP 2.11+
+* PHP 8.0+
 
 ## Installation
 
