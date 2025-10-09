@@ -17,7 +17,6 @@ if (!defined('ROOT')) {
 
 require_once InstalledVersions::getInstallPath('pieceofcake2/cakephp') . DS . 'tests' . DS . 'bootstrap.php';
 
-App::uses('CakePlugin', 'Core');
 CakePlugin::load('DebugKit', [
     'path' => dirname(__DIR__) . DS,
 ]);

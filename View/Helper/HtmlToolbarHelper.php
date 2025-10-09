@@ -13,7 +13,6 @@
  */
 
 App::uses('ToolbarHelper', 'DebugKit.View/Helper');
-App::uses('Security', 'Utility');
 
 /**
  * Html Toolbar Helper

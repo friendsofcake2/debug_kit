@@ -14,15 +14,10 @@
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  **/
 
-$path = CakePlugin::path('DebugKit');
-
-App::uses('View', 'View');
-App::uses('Controller', 'Controller');
-App::uses('CakeResponse', 'Network');
-App::uses('Router', 'Routing');
 App::uses('ToolbarHelper', 'DebugKit.View/Helper');
 App::uses('FirePhpToolbarHelper', 'DebugKit.View/Helper');
 
+$path = CakePlugin::path('DebugKit');
 require_once $path . 'tests' . DS . 'TestCase' . DS . 'TestFireCake.php';
 
 /**

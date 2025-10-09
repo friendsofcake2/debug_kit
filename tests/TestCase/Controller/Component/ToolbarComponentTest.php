@@ -12,10 +12,7 @@
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
-App::uses('Router', 'Routing');
-App::uses('Controller', 'Controller');
 App::uses('AppController', 'Controller');
-App::uses('Component', 'Controller');
 App::uses('ToolbarComponent', 'DebugKit.Controller/Component');
 App::uses('DebugMemory', 'DebugKit.Lib');
 App::uses('DebugTimer', 'DebugKit.Lib');

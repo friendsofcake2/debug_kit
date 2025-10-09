@@ -14,11 +14,7 @@
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
-App::uses('View', 'View');
-App::uses('Controller', 'Controller');
-App::uses('Helper', 'View');
 App::uses('ToolbarHelper', 'DebugKit.View/Helper');
-App::uses('ConnectionManager', 'Manager');
 
 /**
  * Class MockBackendHelper

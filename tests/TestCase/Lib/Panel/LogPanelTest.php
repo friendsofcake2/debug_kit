@@ -14,7 +14,6 @@
  **/
 
 App::uses('LogPanel', 'DebugKit.Lib/Panel');
-App::uses('Controller', 'Controller');
 
 /**
  * Class LogPanelTest

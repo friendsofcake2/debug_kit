@@ -14,7 +14,6 @@
 
 App::uses('DebugKitDebugger', 'DebugKit.Lib');
 App::uses('AppHelper', 'View/Helper');
-App::uses('ConnectionManager', 'Model');
 
 /**
  * Provides Base methods for content specific debug toolbar helpers.

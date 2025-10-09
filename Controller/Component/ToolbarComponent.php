@@ -13,13 +13,8 @@
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
-App::uses('CakeLog', 'Log');
-App::uses('CakeLogInterface', 'Log');
 App::uses('DebugTimer', 'DebugKit.Lib');
 App::uses('DebugMemory', 'DebugKit.Lib');
-App::uses('HelperCollection', 'View');
-App::uses('CakeEventManager', 'Event');
-App::uses('CakeEventListener', 'Event');
 
 /**
  * Class ToolbarComponent

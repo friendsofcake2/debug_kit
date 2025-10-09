@@ -13,7 +13,6 @@
  */
 
 App::uses('AppHelper', 'View/Helper');
-App::uses('HtmlHelper', 'View/Helper');
 
 /**
  * Class SimpleGraphHelper

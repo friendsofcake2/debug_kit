@@ -14,14 +14,8 @@
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
-App::uses('View', 'View');
-App::uses('Controller', 'Controller');
-App::uses('Router', 'Routing');
-App::uses('CakeResponse', 'Network');
 App::uses('ToolbarHelper', 'DebugKit.View/Helper');
 App::uses('HtmlToolbarHelper', 'DebugKit.View/Helper');
-App::uses('HtmlHelper', 'View/Helper');
-App::uses('FormHelper', 'View/Helper');
 
 /**
  * Class HtmlToolbarHelperTestCase

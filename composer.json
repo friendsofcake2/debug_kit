@@ -7,7 +7,7 @@
     "require": {
         "php": ">=8.0",
         "composer/installers": "*",
-        "pieceofcake2/cakephp": "^2.11"
+        "pieceofcake2/cakephp": "^2.12"
     },
     "require-dev": {
         "cakephp/cakephp-codesniffer": "^5.0",
@@ -18,6 +18,12 @@
     },
     "replace": {
         "cakephp/debug_kit": "^2.0"
+    },
+    "autoload-dev": {
+        "classmap": ["tests/test_app/"],
+        "exclude-from-classmap": [
+            "vendor/pieceofcake2/app/src/Console/Command/AppShell.php"
+        ]
     },
     "config": {
         "sort-packages": true,

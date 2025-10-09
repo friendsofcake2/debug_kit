@@ -14,8 +14,6 @@
  */
 
 App::uses('SqlLogPanel', 'DebugKit.Lib/Panel');
-App::uses('Model', 'Model');
-App::uses('Controller', 'Controller');
 
 /**
  * Class SqlLogPanelTest
