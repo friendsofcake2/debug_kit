@@ -49,7 +49,7 @@ in your `app/Config/bootstrap.php` file. If you are already using
 
 ```php
 class AppController extends Controller {
-         public $components = array('DebugKit.Toolbar');
+         public $components = ['DebugKit.Toolbar'];
 }
 ```
 
